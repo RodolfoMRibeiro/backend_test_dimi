@@ -43,3 +43,42 @@ func TestLetOnlyNumbers(t *testing.T) {
 	})
 
 }
+
+func TestVerifyingCPForCNPJ(t *testing.T) {
+
+	t.Run("verify if CPF is valid", func(t *testing.T) {
+
+		_, recivedDocValidation := VerifyingCPForCNPJ("05293365029")
+
+		expectedValidation := true
+
+		assert.Equal(t, expectedValidation, recivedDocValidation)
+	})
+
+	t.Run("verify if CPF isn't valid", func(t *testing.T) {
+
+		_, recivedDocValidation := VerifyingCPForCNPJ("05293365429")
+
+		expectedValidation := false
+
+		assert.Equal(t, expectedValidation, recivedDocValidation)
+	})
+
+	t.Run("verify if CNPJ is valid", func(t *testing.T) {
+
+		_, recivedDocValidation := VerifyingCPForCNPJ("82007188000164")
+
+		expectedValidation := true
+
+		assert.Equal(t, expectedValidation, recivedDocValidation)
+	})
+
+	t.Run("verify if CNPJ isn't valid", func(t *testing.T) {
+
+		_, recivedDocValidation := VerifyingCPForCNPJ("82017188000164")
+
+		expectedValidation := false
+
+		assert.Equal(t, expectedValidation, recivedDocValidation)
+	})
+}
