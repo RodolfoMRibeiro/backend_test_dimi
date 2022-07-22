@@ -15,7 +15,6 @@ func TestTrimAllSpacesInString(t *testing.T) {
 		expectedCleanString := "C@l%i*en(tAut#he*nt!ica$tio$%nTo@ken"
 
 		assert.Equal(t, expectedCleanString, recivedBrokenString)
-
 	})
 }
 
@@ -41,7 +40,6 @@ func TestLetOnlyNumbers(t *testing.T) {
 
 		assert.Equal(t, expectedOnlyNumbers, recivedBrokenString)
 	})
-
 }
 
 func TestVerifyingCPForCNPJ(t *testing.T) {

@@ -11,6 +11,7 @@ func Init() {
 }
 
 func Avaiable(r *gin.Engine) {
+
 	user := r.Group("/user")
 	{
 		user.POST("/", controller.CreateUser)
