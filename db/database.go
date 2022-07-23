@@ -20,11 +20,12 @@ var envVars vars.EnvironmentVariables
 func Load() {
 	godotenv.Load(".env")
 	envVars.Load()
+	fmt.Println(envVars)
 	connectDatabase()
 }
 
 func connectDatabase() {
-	databaseStringConfig := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", envVars.User, envVars.Password, envVars.Host, envVars.Port, envVars.Database)
+	databaseStringConfig := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%s", envVars.User, envVars.Password, envVars.Host, envVars.Port, envVars.Database, envVars.Configs)
 	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
 
 	migrate(db)

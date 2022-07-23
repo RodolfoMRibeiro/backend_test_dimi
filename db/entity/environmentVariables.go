@@ -6,10 +6,11 @@ import (
 
 type EnvironmentVariables struct {
 	Database string `env:"DATABASE"`
-	Port     string `env:"MYSQL_PORT" envDefault:"3306"`
-	Host     string `env:"MYSQL_HOST"`
-	User     string `env:"MYSQL_USER"`
-	Password string `env:"MYSQL_PASSWORD"`
+	Port     string `env:"PORT" envDefault:"3306"`
+	Host     string `env:"HOST"`
+	User     string `env:"USER"`
+	Password string `env:"PASSWORD"`
+	Configs  string `env:"CONFIGS"`
 }
 
 func (env *EnvironmentVariables) Load() {
