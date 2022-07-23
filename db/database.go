@@ -19,8 +19,7 @@ var envVars vars.EnvironmentVariables
 
 func Load() {
 	godotenv.Load(".env")
-	envVars.Load()
-	fmt.Println(envVars)
+	envVars.FeedStruct()
 	connectDatabase()
 }
 
@@ -38,12 +37,9 @@ func connectDatabase() {
 }
 
 func migrate(db *gorm.DB) {
-
 	db.AutoMigrate(&account.Account{})
 	db.AutoMigrate(&category.Category{})
 	db.AutoMigrate(&status.Status{})
 	db.AutoMigrate(&transaction.Transaction{})
-
 	db.AutoMigrate(&user.User{})
-
 }

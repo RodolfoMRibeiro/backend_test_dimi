@@ -13,7 +13,7 @@ type EnvironmentVariables struct {
 	Configs  string `env:"CONFIGS"`
 }
 
-func (env *EnvironmentVariables) Load() {
+func (env *EnvironmentVariables) FeedStruct() {
 	env.setWithEnvFile()
 }
 
