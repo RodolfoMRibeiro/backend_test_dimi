@@ -20,7 +20,6 @@ var envVars vars.EnvironmentVariables
 func Load() {
 	godotenv.Load(".env")
 	envVars.Load()
-	fmt.Println(envVars)
 	connectDatabase()
 }
 
