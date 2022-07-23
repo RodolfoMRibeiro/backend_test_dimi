@@ -2,31 +2,29 @@ package integrations
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"transaction/util"
 )
 
 type TransactionStatus struct {
-	Approved bool `json:"approved"`
+	Authorization bool `json:"authorization"`
 }
 
 func (b *TransactionStatus) feedTransactionsStruct(jsonElement string) {
 	json.Unmarshal([]byte(jsonElement), b)
 }
 
-func (b *TransactionStatus) hfghfg() {
+func (b *TransactionStatus) ConnectWithExternalAPI() {
 
-	response, err := http.Get("https://run.mocky.io/v3/d02168c6-d88d-4ff2-aac6-9e9eb3425e31")
-	ValidateErros(err)
+	response, err := http.Get(`https://run.mocky.io/v3/d02168c6-d88d-4ff2-aac6-9e9eb3425e31`)
+	util.PresentateErros(err)
 
 	responseData, err := ioutil.ReadAll(response.Body)
-	ValidateErros(err)
+	util.PresentateErros(err)
 
-	feedTransactionsStruct(string(responseData))
-}
+	fmt.Println(response, "\n\n", string(responseData))
 
-func ValidateErros(err error) {
-	// err != nil {
-	// 	fmt.Println("Error: ", err)
-	// }
+	b.feedTransactionsStruct(string(responseData))
 }

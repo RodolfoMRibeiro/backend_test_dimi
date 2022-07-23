@@ -43,3 +43,9 @@ func VerifyingCPForCNPJ(str string) (string, bool) {
 
 	}
 }
+
+func PresentateErros(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
