@@ -13,10 +13,10 @@ func TestConnectWithExternalAPI(t *testing.T) {
 	t.Run("verify if the func is able to catch transference status", func(t *testing.T) {
 
 		tran.ConnectWithExternalAPI()
-		recivedBrokenString := tran.Authorization
+		recivedJsonInfo := tran.Authorization
 
-		expectedCleanString := true
+		expectedJsonInfo := true
 
-		assert.Equal(t, expectedCleanString, recivedBrokenString)
+		assert.Equal(t, expectedJsonInfo, recivedJsonInfo)
 	})
 }

@@ -44,8 +44,14 @@ func VerifyingCPForCNPJ(str string) (string, bool) {
 	}
 }
 
-func PresentateErros(err error) {
+func PresentatePanicErros(err error) {
 	if err != nil {
 		panic(err)
+	}
+}
+
+func PresentateErros(err error) {
+	if err != nil {
+		fmt.Println("Error: ", err)
 	}
 }
