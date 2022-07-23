@@ -2,7 +2,12 @@ package db
 
 import (
 	"fmt"
-	"transaction/db/entity"
+	vars "transaction/db/entity"
+	account "transaction/module/account/entity"
+	category "transaction/module/category/entity"
+	status "transaction/module/status/entity"
+	transaction "transaction/module/transaction/entity"
+	user "transaction/module/user/entity"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -10,7 +15,7 @@ import (
 )
 
 var DB *gorm.DB
-var envVars entity.EnvironmentVariables
+var envVars vars.EnvironmentVariables
 
 func init() {
 	godotenv.Load(".env")
@@ -33,5 +38,9 @@ func connectDatabase() {
 }
 
 func migrate(db *gorm.DB) {
-
+	db.AutoMigrate(&account.Account{})
+	db.AutoMigrate(&category.Category{})
+	db.AutoMigrate(&status.Status{})
+	db.AutoMigrate(&transaction.Transaction{})
+	db.AutoMigrate(&user.User{})
 }
