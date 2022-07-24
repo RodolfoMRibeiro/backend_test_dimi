@@ -14,7 +14,7 @@ func TrimAllSpacesInString(str string) string {
 }
 
 func RevomeSpecialChars(str string) string {
-	// take care about some UTF-8's characters ( ex.: á ç õ ù... )
+	// take care about some UTF-8 characters ( ex.: á ç õ ù... )
 
 	regx := regexp.MustCompile(`[^ A-Za-z0-9]`)
 
