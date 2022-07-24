@@ -24,14 +24,24 @@ func Load() {
 }
 
 func connectDatabase() {
-	databaseStringConfig := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%s", envVars.User, envVars.Password, envVars.Host, envVars.Port, envVars.Database, envVars.Configs)
-	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
+	databaseStringConfig := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s%s",
 
-	migrate(db)
+		envVars.User,
+		envVars.Password,
+		envVars.Host,
+		envVars.Port,
+		envVars.Database,
+		envVars.Configs,
+	)
+
+	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
 
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
+
+	migrate(db)
 
 	DB = db
 }
