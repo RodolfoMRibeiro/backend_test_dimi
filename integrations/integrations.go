@@ -11,7 +11,7 @@ type TransactionStatus struct {
 	Authorization bool `json:"authorization"`
 }
 
-func (b *TransactionStatus) feedTransactionsStruct(jsonElement string) {
+func (b *TransactionStatus) feedTransactionStruct(jsonElement string) {
 	json.Unmarshal([]byte(jsonElement), b)
 }
 
@@ -24,5 +24,5 @@ func (b *TransactionStatus) ConnectWithExternalAPI() {
 	responseData, err := ioutil.ReadAll(response.Body)
 	util.PresentateErros(err)
 
-	b.feedTransactionsStruct(string(responseData))
+	b.feedTransactionStruct(string(responseData))
 }

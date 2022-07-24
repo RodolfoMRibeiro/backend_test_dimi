@@ -13,25 +13,33 @@ func Init() {
 func Avaiable(r *gin.Engine) {
 
 	user := r.Group("/user")
-	{
-		user.POST("/", controller.CreateUser)
-		user.GET("/:id", controller.FindUser)
-		user.PUT("/:id", controller.UploadUser)
-		user.DELETE("/:id", controller.DeleteUser)
-	}
+	userRoutes(user)
 
 	account := r.Group("/account")
-	{
-		account.POST("/", controller.CreateAccount)
-		account.GET("/:id", controller.FindAccount)
-		account.PUT("/:id", controller.UpdateAccount)
-		account.DELETE("/:id", controller.DeleteAccount)
+	accountRoutes(account)
 
-		transaction := account.Group("/transaction")
-		{
-			transaction.POST("/", controller.CreateTransaction)
-			transaction.GET("/:id", controller.FindTransaction)
-		}
-	}
+	transaction := account.Group("/transaction")
+	transactionRoutes(transaction)
+}
 
+func userRoutes(user *gin.RouterGroup) {
+
+	user.POST("/", controller.CreateUser)
+	user.GET("/:id", controller.FindUser)
+	user.PUT("/:id", controller.UploadUser)
+	user.DELETE("/:id", controller.DeleteUser)
+}
+
+func accountRoutes(account *gin.RouterGroup) {
+
+	account.POST("/", controller.CreateAccount)
+	account.GET("/:id", controller.FindAccount)
+	account.PUT("/:id", controller.UpdateAccount)
+	account.DELETE("/:id", controller.DeleteAccount)
+}
+
+func transactionRoutes(transaction *gin.RouterGroup) {
+
+	transaction.POST("/", controller.CreateTransaction)
+	transaction.GET("/:id", controller.FindTransaction)
 }
