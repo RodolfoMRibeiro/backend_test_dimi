@@ -1,6 +1,12 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	entity_user "transaction/module/user/entity"
+
+	"github.com/gin-gonic/gin"
+)
+
+var newUser *entity_user.User
 
 func CreateUser(c *gin.Context) {
 

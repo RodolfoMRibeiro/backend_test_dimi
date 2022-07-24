@@ -2,12 +2,13 @@ package db
 
 import (
 	"fmt"
-	vars "transaction/db/entity"
-	account "transaction/module/account/entity"
-	category "transaction/module/category/entity"
-	status "transaction/module/status/entity"
-	transaction "transaction/module/transaction/entity"
-	user "transaction/module/user/entity"
+	entity_env_vars "transaction/db/entity"
+	entity_account "transaction/module/account/entity"
+	entity_category "transaction/module/category/entity"
+	entity_status "transaction/module/status/entity"
+	entity_transaction "transaction/module/transaction/entity"
+	entity_user "transaction/module/user/entity"
+	"transaction/util"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -15,7 +16,7 @@ import (
 )
 
 var DB *gorm.DB
-var envVars vars.EnvironmentVariables
+var envVars entity_env_vars.EnvironmentVariables
 
 func Load() {
 	godotenv.Load(".env")
@@ -27,19 +28,16 @@ func connectDatabase() {
 	databaseStringConfig := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%s", envVars.User, envVars.Password, envVars.Host, envVars.Port, envVars.Database, envVars.Configs)
 	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
 
+	util.PresentatePanicErros(err)
 	migrate(db)
-
-	if err != nil {
-		panic("Failed to connect to database!")
-	}
-
-	DB = db
 }
 
 func migrate(db *gorm.DB) {
-	db.AutoMigrate(&account.Account{})
-	db.AutoMigrate(&category.Category{})
-	db.AutoMigrate(&status.Status{})
-	db.AutoMigrate(&transaction.Transaction{})
-	db.AutoMigrate(&user.User{})
+	db.Table("tb_accounts").AutoMigrate(&entity_account.Account{})
+	db.Table("tb_categories").AutoMigrate(&entity_category.Category{})
+	db.Table("tb_status").AutoMigrate(&entity_status.Status{})
+	db.Table("tb_transactions").AutoMigrate(&entity_transaction.Transaction{})
+	db.Table("tb_users").AutoMigrate(&entity_user.User{})
+
+	DB = db
 }
