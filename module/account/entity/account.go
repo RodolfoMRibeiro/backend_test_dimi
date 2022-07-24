@@ -3,8 +3,9 @@ package entity
 import "transaction/module/transaction/entity"
 
 type Account struct {
-	Id           int `gorm:"primaryKey"`
-	CpfCnpj      string
+	Id           int    `gorm:"primaryKey"`
+	CpfCnpj      string `gorm:"type:varchar(14)"`
 	Balance      int
-	Transactions []entity.Transaction `gorm:"foreignKey:IdPayer;foreignKey:IdPayee"`
+	TransacPayer entity.Transaction `gorm:"foreignKey:IdPayer"`
+	TransacPayee entity.Transaction `gorm:"foreignKey:IdPayee"`
 }
