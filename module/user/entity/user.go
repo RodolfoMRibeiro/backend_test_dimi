@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"encoding/json"
 	"transaction/module/account/entity"
 )
 
@@ -11,8 +10,4 @@ type User struct {
 	IdCategory int              `json:"id_category"`
 	FullName   string           `json:"full_name"`
 	Password   string           `json:"password"`
-}
-
-func (u *User) SetBook(jsonElement string) {
-	json.Unmarshal([]byte(jsonElement), u)
 }
