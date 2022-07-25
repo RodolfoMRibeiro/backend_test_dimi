@@ -8,5 +8,5 @@ import (
 
 func TransactionRoutes(transaction *gin.RouterGroup) {
 	transaction.POST("/", module_transaction.CreateTransaction)
-	transaction.GET("/:id", module_transaction.FindTransaction)
+	transaction.GET("/", module_transaction.FindTransaction)
 }
