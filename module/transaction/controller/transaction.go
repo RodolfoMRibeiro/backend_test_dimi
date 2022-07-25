@@ -9,23 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var newTransaction *entity_transaction.Transaction
+var NewTransaction *entity_transaction.Transaction
 
 func CreateTransaction(c *gin.Context) {
 
-	if err := c.BindJSON(&newTransaction); err != nil {
+	if err := c.BindJSON(&NewTransaction); err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
 
-	db.DB.Table("tb_transactions").Create(&newTransaction)
+	db.DB.Table("tb_transactions").Create(&NewTransaction)
 
-	c.JSON(http.StatusOK, gin.H{"New user registred": newTransaction})
+	c.JSON(http.StatusOK, gin.H{"New user registred": NewTransaction})
 }
 
 func FindTransaction(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_transactions").Where("id = ?", c.Param("id")).First(&newTransaction).Error)
+	util.BadRequest(c, db.DB.Table("tb_transactions").First(&NewTransaction).Error)
 
-	c.JSON(http.StatusOK, gin.H{"data": newTransaction})
+	c.JSON(http.StatusOK, gin.H{"data": NewTransaction})
 }
