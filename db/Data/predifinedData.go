@@ -21,7 +21,9 @@ func categoryData(db *gorm.DB) {
 	}
 
 	for _, category := range categories {
-		db.Table("tb_categories").Create(&category)
+		if err := db.Table("tb_categories").Create(&category).Error; err != nil {
+			break
+		}
 	}
 }
 
@@ -32,6 +34,8 @@ func statusData(db *gorm.DB) {
 	}
 
 	for _, status := range statusArr {
-		db.Table("tb_status").Create(&status)
+		if err := db.Table("tb_status").Create(&status).Error; err != nil {
+			break
+		}
 	}
 }
