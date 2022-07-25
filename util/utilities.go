@@ -2,9 +2,12 @@ package util
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 
+	// "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 	"github.com/paemuri/brdoc"
 )
 
@@ -53,5 +56,12 @@ func PresentatePanicErros(err error) {
 func PresentateErros(err error) {
 	if err != nil {
 		fmt.Println("Error: ", err)
+	}
+}
+
+func BadRequest(c *gin.Context, err error) {
+	if err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": ""})
+		return
 	}
 }

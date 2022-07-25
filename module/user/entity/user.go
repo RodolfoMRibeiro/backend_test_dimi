@@ -1,11 +1,18 @@
 package entity
 
-import "transaction/module/account/entity"
+import (
+	"encoding/json"
+	"transaction/module/account/entity"
+)
 
 type User struct {
-	CpfCnpj    string           `gorm:"type:varchar(14);primaryKey;autoIncrement:false"`
-	Account    []entity.Account `gorm:"foreignKey:CpfCnpj"`
-	IdCategory int
-	Fullname   string
-	Password   string
+	CpfCnpj    string           `json:"cpf_cnpj" gorm:"type:varchar(14);primaryKey;autoIncrement:false"`
+	Account    []entity.Account `json:"account" gorm:"foreignKey:CpfCnpj"`
+	IdCategory int              `json:"id_category"`
+	FullName   string           `json:"full_name"`
+	Password   string           `json:"password"`
+}
+
+func (u *User) SetBook(jsonElement string) {
+	json.Unmarshal([]byte(jsonElement), u)
 }
