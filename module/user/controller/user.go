@@ -9,15 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var user *entity_user.User
 var newUser *entity_user.User
 
 func CreateUser(c *gin.Context) {
 
-	err := c.ShouldBind(&newUser)
-	util.BadRequest(c, err)
+	util.BadRequest(c, c.ShouldBind(&newUser))
 
-	// entity_user.AddToDataBase(&newUser)
 	db.DB.Create(&newUser)
 
 	c.JSON(http.StatusOK, gin.H{"New user registred": newUser})
@@ -25,31 +22,27 @@ func CreateUser(c *gin.Context) {
 
 func FindUser(c *gin.Context) {
 
-	err := db.DB.Where("id = ?", c.Param("id")).First(&newUser).Error
-	util.BadRequest(c, err)
+	util.BadRequest(c, db.DB.Where("id = ?", c.Param("id")).First(&newUser).Error)
 
 	c.JSON(http.StatusOK, gin.H{"data": newUser})
 }
 
 func UploadUser(c *gin.Context) {
 
-	err := db.DB.Where("id = ?", c.Param("id")).First(&user).Error
-	util.BadRequest(c, err)
+	util.BadRequest(c, db.DB.Where("id = ?", c.Param("id")).First(&newUser).Error)
 
-	err1 := c.ShouldBind(&newUser)
-	util.BadRequest(c, err1)
+	util.BadRequest(c, c.ShouldBind(&newUser))
 
-	if db.DB.Model(&user).Updates(&newUser).RowsAffected == 0 {
-		db.DB.Create(&user)
+	if db.DB.Model(&newUser).Updates(&newUser).RowsAffected == 0 {
+		db.DB.Create(&newUser)
 	}
 }
 
 func DeleteUser(c *gin.Context) {
 
-	err := db.DB.Where("id = ?", c.Param("id")).First(&user).Error
-	util.BadRequest(c, err)
+	util.BadRequest(c, db.DB.Where("id = ?", c.Param("id")).First(&newUser).Error)
 
-	db.DB.Delete(&user)
+	db.DB.Delete(&newUser)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }
