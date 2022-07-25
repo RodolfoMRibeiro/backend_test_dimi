@@ -8,7 +8,7 @@ import (
 
 func UserRoutes(user *gin.RouterGroup) {
 	user.POST("/", module_user.CreateUser)
-	user.GET("/:id", module_user.FindUser)
-	user.PUT("/:id", module_user.UploadUser)
-	user.DELETE("/:id", module_user.DeleteUser)
+	user.GET("/:cpf_cnpj", module_user.FindUser)
+	user.PUT("/:cpf_cnpj", module_user.UploadUser)
+	user.DELETE("/:cpf_cnpj", module_user.DeleteUser)
 }
