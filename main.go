@@ -2,6 +2,7 @@ package main
 
 import (
 	"transaction/db"
+	predefinedData "transaction/db/Data"
 	"transaction/routes"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,7 @@ import (
 
 func init() {
 	db.Load()
+	predefinedData.Load(db.DB)
 }
 
 func main() {
