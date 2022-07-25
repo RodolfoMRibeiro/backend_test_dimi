@@ -9,43 +9,45 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var newAccount *entity_account.Account
+var NewAccount *entity_account.Account
 
 func CreateAccount(c *gin.Context) {
 
-	if err := c.BindJSON(&newAccount); err != nil {
+	if err := c.BindJSON(&NewAccount); err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
 
-	db.DB.Table("tb_accounts").Create(&newAccount)
+	db.DB.Table("tb_accounts").Create(&NewAccount)
 
-	c.JSON(http.StatusOK, gin.H{"New user registred": newAccount})
+	c.JSON(http.StatusOK, gin.H{"New user registred": NewAccount})
 }
 
 func FindAccount(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_accounts").First(&newAccount).Error)
+	util.BadRequest(c, db.DB.Table("tb_accounts").First(&NewAccount).Error)
 
-	c.JSON(http.StatusOK, gin.H{"data": newAccount})
+	c.JSON(http.StatusOK, gin.H{"data": NewAccount})
 }
 
 func UpdateAccount(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_accounts").Where("id = ?", c.Param("id")).First(&newAccount).Error)
-
-	util.BadRequest(c, c.ShouldBind(&newAccount))
-
-	if db.DB.Table("tb_accounts").Model(&newAccount).Updates(&newAccount).RowsAffected == 0 {
-		db.DB.Table("tb_accounts").Create(&newAccount)
+	if err := c.BindJSON(&NewAccount); err != nil {
+		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
+		return
 	}
+
+	db.DB.Table("tb_accounts").Where("id = ?", NewAccount.ID).Updates(&NewAccount)
 }
 
 func DeleteAccount(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_accounts").Where("id = ?", c.Param("id")).First(&newAccount).Error)
+	if err := c.BindJSON(&NewAccount); err != nil {
+		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
+		return
+	}
 
-	db.DB.Table("tb_accounts").Delete(&newAccount)
+	db.DB.Table("tb_accounts").Where("id = ?", NewAccount.ID).Delete(&NewAccount)
 
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusOK, gin.H{"Account deleted": NewAccount})
 }

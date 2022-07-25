@@ -1,9 +1,13 @@
 package entity
 
-import "transaction/module/transaction/entity"
+import (
+	"transaction/module/transaction/entity"
+
+	"gorm.io/gorm"
+)
 
 type Account struct {
-	Id           int                `json:"id" gorm:"primaryKey"`
+	gorm.Model
 	CpfCnpj      string             `json:"cpf_cnpj" gorm:"type:varchar(14)"`
 	Balance      int                `json:"balance"`
 	TransacPayer entity.Transaction `json:"transac_payer" gorm:"foreignKey:IdPayer"`
