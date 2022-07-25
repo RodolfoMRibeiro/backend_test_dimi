@@ -3,7 +3,7 @@ package entity
 import "transaction/module/user/entity"
 
 type Category struct {
-	Id    int `gorm:"primaryKey"`
-	Name  string
+	Id    int           `gorm:"primaryKey"`
+	Name  string        `gorm:"type:varchar(15)"`
 	Users []entity.User `gorm:"foreignKey:IdCategory"`
 }
