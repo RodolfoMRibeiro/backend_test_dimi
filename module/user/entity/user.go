@@ -12,3 +12,11 @@ type User struct {
 	FullName   string           `json:"full_name" gorm:"type:varchar(30)"`
 	Password   string           `json:"password" gorm:"type:varchar(30)"`
 }
+
+type Tabler interface {
+	TableName() string
+}
+
+func (User) TableName() string {
+	return "tb_users"
+}

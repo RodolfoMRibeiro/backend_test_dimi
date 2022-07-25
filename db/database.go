@@ -47,9 +47,15 @@ func connectDatabase() {
 }
 
 func migrate(db *gorm.DB) {
-	db.Table("tb_accounts").AutoMigrate(&entity_account.Account{})
-	db.Table("tb_categories").AutoMigrate(&entity_category.Category{})
-	db.Table("tb_status").AutoMigrate(&entity_status.Status{})
-	db.Table("tb_transactions").AutoMigrate(&entity_transaction.Transaction{})
-	db.Table("tb_users").AutoMigrate(&entity_user.User{})
+	db.AutoMigrate(&entity_account.Account{})
+	db.AutoMigrate(&entity_category.Category{})
+	db.AutoMigrate(&entity_status.Status{})
+	db.AutoMigrate(&entity_transaction.Transaction{})
+	db.AutoMigrate(&entity_user.User{})
+
+	// db.Table("tb_accounts").AutoMigrate(&entity_account.Account{})
+	// db.Table("tb_categories").AutoMigrate(&entity_category.Category{})
+	// db.Table("tb_status").AutoMigrate(&entity_status.Status{})
+	// db.Table("tb_transactions").AutoMigrate(&entity_transaction.Transaction{})
+	// db.Table("tb_users").AutoMigrate(&entity_user.User{})
 }
