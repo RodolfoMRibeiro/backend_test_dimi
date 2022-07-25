@@ -9,12 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var newUser *entity_user.User
+var newUser *entity_user.User //= &entity_user.User{}
 
 func CreateUser(c *gin.Context) {
-	// fmt.Println("entrou")
-	util.BadRequest(c, c.ShouldBind(&newUser))
-	// fmt.Println("bindou")
+
+	if err := c.BindJSON(&newUser); err != nil {
+		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
+		return
+	}
 
 	db.DB.Table("tb_users").Create(&newUser)
 
@@ -23,7 +25,7 @@ func CreateUser(c *gin.Context) {
 
 func FindUser(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_users").Where("cpf_cnpj = ?", c.Param("cpf_cnpj")).First(&newUser).Error)
+	util.BadRequest(c, db.DB.Table("tb_users").First(&newUser).Error)
 
 	c.JSON(http.StatusOK, gin.H{"data": newUser})
 }

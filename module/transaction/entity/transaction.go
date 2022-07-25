@@ -7,3 +7,11 @@ type Transaction struct {
 	IdStatus int `json:"id_status"`
 	Value    int `json:"value"`
 }
+
+type Tabler interface {
+	TableName() string
+}
+
+func (Transaction) TableName() string {
+	return "tb_transactions"
+}

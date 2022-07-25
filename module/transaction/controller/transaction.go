@@ -13,7 +13,10 @@ var newTransaction *entity_transaction.Transaction
 
 func CreateTransaction(c *gin.Context) {
 
-	util.BadRequest(c, c.ShouldBind(&newTransaction))
+	if err := c.BindJSON(&newTransaction); err != nil {
+		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
+		return
+	}
 
 	db.DB.Table("tb_transactions").Create(&newTransaction)
 

@@ -13,7 +13,10 @@ var newAccount *entity_account.Account
 
 func CreateAccount(c *gin.Context) {
 
-	util.BadRequest(c, c.ShouldBind(&newAccount))
+	if err := c.BindJSON(&newAccount); err != nil {
+		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
+		return
+	}
 
 	db.DB.Table("tb_accounts").Create(&newAccount)
 
@@ -22,7 +25,7 @@ func CreateAccount(c *gin.Context) {
 
 func FindAccount(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_accounts").Where("id = ?", c.Param("id")).First(&newAccount).Error)
+	util.BadRequest(c, db.DB.Table("tb_accounts").First(&newAccount).Error)
 
 	c.JSON(http.StatusOK, gin.H{"data": newAccount})
 }

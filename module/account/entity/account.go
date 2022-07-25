@@ -9,3 +9,11 @@ type Account struct {
 	TransacPayer entity.Transaction `json:"transac_payer" gorm:"foreignKey:IdPayer"`
 	TransacPayee entity.Transaction `json:"transac_payee" gorm:"foreignKey:IdPayee"`
 }
+
+type Tabler interface {
+	TableName() string
+}
+
+func (Account) TableName() string {
+	return "tb_accounts"
+}
