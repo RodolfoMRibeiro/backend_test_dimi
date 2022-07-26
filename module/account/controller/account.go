@@ -75,3 +75,12 @@ func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
 
 	c.JSON(http.StatusOK, gin.H{"Account deleted": NewAccount})
 }
+
+func GetAccountById(id int) (entity_account.Account, error) {
+	var NewAccount *entity_account.Account = &entity_account.Account{}
+
+	if err := db.DB.Table("tb_accounts").Where("id = ?", id).First(NewAccount).Error; err != nil {
+		return *NewAccount, err
+	}
+	return *NewAccount, nil
+}

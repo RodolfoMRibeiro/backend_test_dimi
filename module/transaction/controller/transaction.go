@@ -19,6 +19,7 @@ func CreateTransaction(c *gin.Context) {
 	}
 
 	NewTransaction.ValidateTransaction()
+
 	//arrumar essa porcaria de 1 depois --> clean code prega a destruição de magic numbers
 	if NewTransaction.IdPayer != NewTransaction.IdPayee && NewTransaction.IdStatus != 1 {
 
