@@ -18,6 +18,8 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 
+	NewTransaction.ValidateTransaction()
+
 	db.DB.Table("tb_transactions").Create(&NewTransaction)
 
 	c.JSON(http.StatusOK, gin.H{"New user registred": NewTransaction})
