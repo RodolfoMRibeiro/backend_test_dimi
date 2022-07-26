@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"transaction/db"
 	entity_account "transaction/module/account/entity"
-	"transaction/util"
 
 	"github.com/gin-gonic/gin"
 )
 
 var NewAccount *entity_account.Account
+var NewAccounts *[]entity_account.Account
 
 func CreateAccount(c *gin.Context) {
 
@@ -25,9 +25,8 @@ func CreateAccount(c *gin.Context) {
 
 func FindAccount(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_accounts").First(&NewAccount).Error)
-
-	c.JSON(http.StatusOK, gin.H{"data": NewAccount})
+	db.DB.Find(&NewAccounts)
+	c.JSON(http.StatusOK, NewAccounts)
 }
 
 func UpdateAccount(c *gin.Context) {

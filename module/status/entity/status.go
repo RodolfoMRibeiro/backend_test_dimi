@@ -18,9 +18,3 @@ type Tabler interface {
 func (Status) TableName() string {
 	return "tb_status"
 }
-
-// func (Status) FeedAssociatedTable() {
-
-// 	var s = []Status{{Id: 1, Name: "Accepted"}, {Id: 2, Name: "Denied"}}
-// 	db.DB.Table("tb_users").Create(s)
-// }
