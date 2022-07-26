@@ -16,12 +16,22 @@ func CreateTransaction(c *gin.Context) {
 	}
 	if NewTransaction.IdPayer != NewTransaction.IdPayee {
 		NewTransaction.ValidateTransaction()
-		db.DB.Table("tb_transactions").Create(&NewTransaction)
+
+		if err := db.DB.Table("tb_transactions").Create(&NewTransaction).Error; err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, err)
+			return
+		}
+
 		c.JSON(http.StatusOK, gin.H{"New user registred": NewTransaction})
 	}
 }
 func FindTransaction(c *gin.Context) {
 	var NewTransactions *[]entity_transaction.Transaction
-	db.DB.Find(&NewTransactions)
+
+	if err := db.DB.Find(&NewTransactions).Error; err != nil {
+		c.IndentedJSON(http.StatusNoContent, "could not find the transaction")
+		return
+	}
+
 	c.JSON(http.StatusOK, NewTransactions)
 }
