@@ -3,7 +3,6 @@ package controller
 import (
 	"net/http"
 	"transaction/db"
-	controller_account "transaction/module/account/controller"
 	entity_transaction "transaction/module/transaction/entity"
 
 	"github.com/gin-gonic/gin"
@@ -20,13 +19,10 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	NewTransaction.ValidateTransaction()
+	// db.DB.Joins("FROM tb_transactions A RIGHT JOIN tb_accounts ON A.id_payer = ?").Where(NewTransaction.IdPayer).Find(&controller_account.NewAccount)
 
-	db.DB.Table("tb_transactions").Create(&NewTransaction)
+	// c.JSON(http.StatusOK, gin.H{"New user registred": controller_account.NewAccount})
 
-	// db.DB.Table("tb_transactions")
-
-	c.JSON(http.StatusOK, gin.H{"New user registred": controller_account.NewAccount})
 }
 
 func FindTransaction(c *gin.Context) {
