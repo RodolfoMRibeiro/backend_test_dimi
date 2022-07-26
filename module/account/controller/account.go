@@ -8,45 +8,60 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var NewAccount *entity_account.Account
-var NewAccounts *[]entity_account.Account
-
 func CreateAccount(c *gin.Context) {
-
-	if err := c.BindJSON(&NewAccount); err != nil {
+	var NewAccount *entity_account.Account = &entity_account.Account{}
+	if err := c.BindJSON(NewAccount); err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
 
-	db.DB.Table("tb_accounts").Create(&NewAccount)
+	if err := db.DB.Table("tb_accounts").Create(NewAccount).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"New user registred": NewAccount})
 }
 
 func FindAccount(c *gin.Context) {
+	var NewAccounts *[]entity_account.Account = &[]entity_account.Account{}
 
-	db.DB.Find(&NewAccounts)
+	if err := db.DB.Find(NewAccounts).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, NewAccounts)
 }
 
 func UpdateAccount(c *gin.Context) {
+	var NewAccount *entity_account.Account = &entity_account.Account{}
 
-	if err := c.BindJSON(&NewAccount); err != nil {
+	if err := c.BindJSON(NewAccount); err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
 
-	db.DB.Table("tb_accounts").Where("id = ?", NewAccount.ID).Updates(&NewAccount)
+	if err := db.DB.Table("tb_accounts").Where("id = ?", NewAccount.Id).Updates(NewAccount).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
 }
 
 func DeleteAccount(c *gin.Context) {
+	var NewAccount *entity_account.Account = &entity_account.Account{}
 
-	if err := c.BindJSON(&NewAccount); err != nil {
+	if err := c.BindJSON(NewAccount); err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
 
-	db.DB.Table("tb_accounts").Where("id = ?", NewAccount.ID).Delete(&NewAccount)
+	if err := db.DB.Table("tb_accounts").Where("id = ?", NewAccount.Id).Delete(NewAccount).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	DeleteAllAccountsFromUser(c)
 
 	c.JSON(http.StatusOK, gin.H{"Account deleted": NewAccount})
 }
