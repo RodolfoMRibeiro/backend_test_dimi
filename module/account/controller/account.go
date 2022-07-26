@@ -63,3 +63,15 @@ func DeleteAccount(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"Account deleted": NewAccount})
 }
+
+func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
+	var NewAccount *entity_account.Account = &entity_account.Account{}
+	NewAccount.CpfCnpj = cpf_cnpj
+
+	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", cpf_cnpj).Delete(NewAccount).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"Account deleted": NewAccount})
+}
