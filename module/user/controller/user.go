@@ -1,67 +1,96 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"transaction/db"
 
-	// controller_transaction "transaction/module/transaction/controller"
 	entity_user "transaction/module/user/entity"
 	"transaction/util"
 
 	"github.com/gin-gonic/gin"
 )
 
-var newUser *entity_user.User
-var newUsers *[]entity_user.User
-
 func CreateUser(c *gin.Context) {
 
-	if err := c.BindJSON(&newUser); err != nil {
-		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
-		return
+	var newUser *entity_user.User = &entity_user.User{}
+
+	if check(c, c.BindJSON(&newUser)) && checkEmailAndCPForCPNJ(newUser) {
+		AddUserToDataBase(c, newUser)
 	}
-
-	// The email could even be an primary key for being unique, but it would break either some
-	// future features or destroy the normal forms (3ºth one in special [parcial dependecies])
-	if _, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(newUser.CpfCnpj))); ok {
-		err := db.DB.Table("tb_users").Find(&newUser).Error
-		fmt.Println("não passou do email validation")
-
-		if err == nil && util.IsEmailValid(util.TrimAllSpacesInString(newUser.Email)) {
-			fmt.Println("passou do validation")
-
-			db.DB.Table("tb_users").Create(&newUser)
-
-			c.JSON(http.StatusOK, gin.H{"New user registred": newUser})
-		}
-	}
-
 }
 
 func FindUser(c *gin.Context) {
 
-	db.DB.Find(&newUsers)
-	c.JSON(http.StatusOK, newUsers)
+	var newUsers *[]entity_user.User = &[]entity_user.User{}
+
+	FindUserInDataBase(c, newUsers)
 }
 
 func UploadUser(c *gin.Context) {
 
-	if err := c.BindJSON(&newUser); err != nil {
-		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
-		return
-	}
+	var newUser *entity_user.User = &entity_user.User{}
 
-	// db.DB.Table("tb_users").Where("cpf_cnpj = ?", c.Param("cpf_cnpj")).Updates(&newUser) --> caso queira usar a validação pelo link
-	db.DB.Table("tb_users").Where("cpf_cnpj = ?", newUser.CpfCnpj).Updates(&newUser)
+	if check(c, c.BindJSON(&newUser)) && checkEmailAndCPForCPNJ(newUser) {
+		UpdateUserInDataBase(c, newUser)
+	}
 }
 
 func DeleteUser(c *gin.Context) {
 
-	if err := c.BindJSON(&newUser); err != nil {
+	var newUser *entity_user.User = &entity_user.User{}
+
+	if check(c, c.BindJSON(&newUser)) && checkEmailAndCPForCPNJ(newUser) {
+		DeleteUserInDataBase(c, newUser)
+	}
+}
+
+// -------------------------------------------< Aux funcs >------------------------------------------- \\
+
+func check(c *gin.Context, err error) bool {
+	if err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
+		return false
+	}
+	return true
+}
+
+func checkEmailAndCPForCPNJ(u *entity_user.User) (boolean bool) {
+
+	cpfORcnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(u.CpfCnpj)))
+	if ok && util.IsEmailValid(util.TrimAllSpacesInString(u.Email)) {
+		boolean = true
+		u.CpfCnpj = cpfORcnpj
+	}
+	return
+}
+
+// -----------------------------------------< feed database >----------------------------------------- \\
+
+func AddUserToDataBase(c *gin.Context, u *entity_user.User) {
+	if err := db.DB.Table("tb_users").Create(&u).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
+	c.JSON(http.StatusCreated, u)
+}
 
-	c.JSON(http.StatusNotAcceptable, gin.H{"Warning": "contact our reponsible sector to accomplish the action"})
+func FindUserInDataBase(c *gin.Context, us *[]entity_user.User) {
+	if err := db.DB.Find(us).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusFound, us)
+}
+
+func UpdateUserInDataBase(c *gin.Context, u *entity_user.User) {
+	if err := db.DB.Table("tb_users").Where("cpf_cnpj = ?", u.CpfCnpj).Updates(&u).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, u)
+}
+
+func DeleteUserInDataBase(c *gin.Context, u *entity_user.User) {
+
+	c.JSON(http.StatusOK, u)
 }

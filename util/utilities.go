@@ -37,19 +37,10 @@ func IsEmailValid(e string) bool {
 }
 
 func VerifyingCPForCNPJ(str string) (string, bool) {
-
-	switch {
-
-	case brdoc.IsCPF(str):
+	if brdoc.IsCPF(str) || brdoc.IsCNPJ(str) {
 		return str, true
-
-	case brdoc.IsCNPJ(str):
-		return str, true
-
-	default:
-		return `invalid CPF or CNPJ`, false
-
 	}
+	return str, false
 }
 
 func PresentatePanicErros(err error) {
