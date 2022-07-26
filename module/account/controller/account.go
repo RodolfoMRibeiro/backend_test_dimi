@@ -61,7 +61,5 @@ func DeleteAccount(c *gin.Context) {
 		return
 	}
 
-	DeleteAllAccountsFromUser(c)
-
 	c.JSON(http.StatusOK, gin.H{"Account deleted": NewAccount})
 }
