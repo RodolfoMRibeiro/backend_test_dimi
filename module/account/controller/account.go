@@ -26,6 +26,7 @@ func FindAccount(c *gin.Context) {
 }
 
 func UpdateAccount(c *gin.Context) {
+
 	var NewAccount *entity_account.Account = &entity_account.Account{}
 
 	if check(c, c.BindJSON(NewAccount)) {
@@ -34,6 +35,7 @@ func UpdateAccount(c *gin.Context) {
 }
 
 func DeleteAccount(c *gin.Context) {
+
 	var NewAccount *entity_account.Account = &entity_account.Account{}
 
 	if check(c, c.BindJSON(NewAccount)) {
@@ -42,6 +44,7 @@ func DeleteAccount(c *gin.Context) {
 }
 
 func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
+
 	var NewAccount *entity_account.Account = &entity_account.Account{}
 	NewAccount.CpfCnpj = cpf_cnpj
 
@@ -53,6 +56,7 @@ func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
 // -------------------------------------------< Aux funcs >------------------------------------------- \\
 
 func check(c *gin.Context, err error) bool {
+
 	if err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return false
@@ -72,6 +76,7 @@ func checkCPForCPNJ(a *entity_account.Account) (boolean bool) {
 // -----------------------------------------< feed database >----------------------------------------- \\
 
 func AddAccountToDataBase(c *gin.Context, a *entity_account.Account) {
+
 	if err := db.DB.Table("tb_accounts").Create(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
