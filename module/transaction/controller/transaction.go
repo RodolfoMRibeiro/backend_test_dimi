@@ -3,13 +3,15 @@ package controller
 import (
 	"net/http"
 	"transaction/db"
+	controller_account "transaction/module/account/controller"
 	entity_transaction "transaction/module/transaction/entity"
-	"transaction/util"
 
 	"github.com/gin-gonic/gin"
 )
 
 var NewTransaction *entity_transaction.Transaction
+
+var NewTransactions *[]entity_transaction.Transaction
 
 func CreateTransaction(c *gin.Context) {
 
@@ -22,12 +24,13 @@ func CreateTransaction(c *gin.Context) {
 
 	db.DB.Table("tb_transactions").Create(&NewTransaction)
 
-	c.JSON(http.StatusOK, gin.H{"New user registred": NewTransaction})
+	// db.DB.Table("tb_transactions")
+
+	c.JSON(http.StatusOK, gin.H{"New user registred": controller_account.NewAccount})
 }
 
 func FindTransaction(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_transactions").First(&NewTransaction).Error)
-
-	c.JSON(http.StatusOK, gin.H{"data": NewTransaction})
+	db.DB.Find(&NewTransactions)
+	c.JSON(http.StatusOK, NewTransactions)
 }
