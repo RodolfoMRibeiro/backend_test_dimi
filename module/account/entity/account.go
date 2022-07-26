@@ -5,10 +5,9 @@ import (
 )
 
 type Account struct {
-	Id           int                `json:"id" gorm:"primaryKey";autoIncrement:1`
+	Id           int                `json:"id" gorm:"primaryKey"`
 	CpfCnpj      string             `json:"cpf_cnpj" gorm:"type:varchar(14)"`
 	Balance      int                `json:"balance"`
-
 	TransacPayer entity.Transaction `json:"transaction" gorm:"foreignKey:IdPayer;autoIncrement:false"`
 }
 
