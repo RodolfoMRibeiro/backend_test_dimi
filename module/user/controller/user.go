@@ -13,6 +13,7 @@ import (
 )
 
 var newUser *entity_user.User
+var newUsers *[]entity_user.User
 
 func CreateUser(c *gin.Context) {
 
@@ -40,9 +41,8 @@ func CreateUser(c *gin.Context) {
 
 func FindUser(c *gin.Context) {
 
-	util.BadRequest(c, db.DB.Table("tb_users").First(&newUser).Error)
-
-	c.JSON(http.StatusOK, gin.H{"data": newUser})
+	db.DB.Find(&newUsers)
+	c.JSON(http.StatusOK, newUsers)
 }
 
 func UploadUser(c *gin.Context) {
