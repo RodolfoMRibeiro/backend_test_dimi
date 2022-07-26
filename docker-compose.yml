@@ -1,0 +1,11 @@
+version: '3.4'
+services:
+  super-app-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: "${DATABASE}"
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    expose:
+      - '${DB_PORT}'
