@@ -9,11 +9,13 @@ import (
 )
 
 func init() {
-	db.Load()
-	seed.Handler(db.DB)
+	db.LoadEnv()
 }
 
 func main() {
+	db.ConnectDatabase()
+	seed.Handler(db.DB)
+
 	router := gin.Default()
 	routes.Avaiable(router)
 	router.Run("localhost:8080")

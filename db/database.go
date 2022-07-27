@@ -18,13 +18,12 @@ import (
 var DB *gorm.DB
 var envVars entity_env_vars.EnvironmentVariables
 
-func Load() {
+func LoadEnv() {
 	godotenv.Load(".env")
 	envVars.FeedStruct()
-	connectDatabase()
 }
 
-func connectDatabase() {
+func ConnectDatabase() {
 	databaseStringConfig := fmt.Sprintf(
 
 		"%s:%s@tcp(%s:%s)/%s%s",
@@ -41,12 +40,12 @@ func connectDatabase() {
 
 	util.PresentatePanicErros(err)
 
-	migrate(db)
+	loadMigrations(db)
 
 	DB = db
 }
 
-func migrate(db *gorm.DB) {
+func loadMigrations(db *gorm.DB) {
 	db.AutoMigrate(&entity_account.Account{})
 	db.AutoMigrate(&entity_category.Category{})
 	db.AutoMigrate(&entity_status.Status{})
