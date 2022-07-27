@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"transaction/db"
 
-
 	// controller_transaction "transaction/module/transaction/controller"
 	"transaction/module/account/controller"
 
@@ -25,9 +24,18 @@ func CreateUser(c *gin.Context) {
 
 func FindUser(c *gin.Context) {
 
-	var newUsers *[]entity_user.User = &[]entity_user.User{}
+	var newUsers []entity_user.User = []entity_user.User{}
 
-	FindUserInDataBase(c, newUsers)
+	if err := db.DB.Find(&newUsers).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	for i := 0; i < len(newUsers); i++ {
+		newUsers[i].Account = controller.GetAccountsFromUser(newUsers[i].CpfCnpj)
+	}
+
+	c.JSON(http.StatusFound, newUsers)
 }
 
 func UploadUser(c *gin.Context) {

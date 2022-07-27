@@ -75,6 +75,16 @@ func checkCPForCPNJ(a *entity_account.Account) (boolean bool) {
 	return
 }
 
+func GetAccountsFromUser(cpf_cnpj string) []entity_account.Account {
+	var NewAccounts []entity_account.Account = []entity_account.Account{}
+
+	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", cpf_cnpj).Find(&NewAccounts).Error; err != nil {
+		return nil
+	}
+
+	return NewAccounts
+}
+
 // -----------------------------------------< feed database >----------------------------------------- \\
 
 func AddAccountToDataBase(c *gin.Context, a *entity_account.Account) {
