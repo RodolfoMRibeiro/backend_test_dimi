@@ -149,3 +149,7 @@ $ docker-compose up -d
 
 ```
 
+<hr>
+<h3 align="center"> ⚡ Thanks for ur coming ⚡ </h3>
+<h4 align="center"> . . . </h4>
+
