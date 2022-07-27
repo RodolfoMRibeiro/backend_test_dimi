@@ -1,6 +1,9 @@
 package entity
 
-import "transaction/integrations"
+import (
+	"transaction/integrations"
+	"transaction/library"
+)
 
 type Transaction struct {
 	Id       int `json:"id" gorm:"primaryKey"`
@@ -15,7 +18,7 @@ type Tabler interface {
 }
 
 func (Transaction) TableName() string {
-	return "tb_transactions"
+	return library.TB_TRANSACTIONS
 }
 
 func (t *Transaction) ValidateTransaction() {

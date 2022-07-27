@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"transaction/db"
+	"transaction/library"
 	"transaction/module/account/entity"
 	entity_transaction "transaction/module/transaction/entity"
 	"transaction/module/user/controller"
@@ -63,12 +64,12 @@ func beginTransaction(transac *entity_transaction.Transaction) error {
 		tx           = db.DB.Begin()
 	)
 
-	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayer).Find(payerAccount).Error; err != nil {
+	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Find(payerAccount).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayee).Find(payeeAccount).Error; err != nil {
+	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Find(payeeAccount).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -80,17 +81,17 @@ func beginTransaction(transac *entity_transaction.Transaction) error {
 	payerAccount.Balance = payerAccount.Balance - transac.Value
 	payeeAccount.Balance = payeeAccount.Balance + transac.Value
 
-	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayer).Updates(payerAccount).Error; err != nil {
+	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Updates(payerAccount).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error; err != nil {
+	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if err := tx.Table("tb_transactions").Create(transac).Error; err != nil {
+	if err := tx.Table(library.TB_TRANSACTIONS).Create(transac).Error; err != nil {
 		tx.Rollback()
 		return err
 	}

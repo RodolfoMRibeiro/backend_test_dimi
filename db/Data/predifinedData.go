@@ -1,6 +1,7 @@
 package predefinedData
 
 import (
+	"transaction/library"
 	entity_category "transaction/module/category/entity"
 	entity_status "transaction/module/status/entity"
 	entity_transaction "transaction/module/transaction/entity"
@@ -21,7 +22,7 @@ func categoryData(db *gorm.DB) {
 	}
 
 	for _, category := range categories {
-		if err := db.Table("tb_categories").Create(&category).Error; err != nil {
+		if err := db.Table(library.TB_CATEGORIES).Create(&category).Error; err != nil {
 			break
 		}
 	}
@@ -34,7 +35,7 @@ func statusData(db *gorm.DB) {
 	}
 
 	for _, status := range statusArr {
-		if err := db.Table("tb_status").Create(&status).Error; err != nil {
+		if err := db.Table(library.TB_STATUS).Create(&status).Error; err != nil {
 			break
 		}
 	}

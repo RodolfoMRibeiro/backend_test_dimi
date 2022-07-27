@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"transaction/library"
 	"transaction/module/account/entity"
 )
 
@@ -18,5 +19,5 @@ type Tabler interface {
 }
 
 func (User) TableName() string {
-	return "tb_users"
+	return library.TB_USERS
 }
