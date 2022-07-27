@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	entity_env_vars "transaction/db/entity"
+	entity_env_vars "transaction/configs/entity"
 	entity_account "transaction/module/account/entity"
 	entity_category "transaction/module/category/entity"
 	entity_status "transaction/module/status/entity"
