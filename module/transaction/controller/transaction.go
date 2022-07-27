@@ -16,7 +16,7 @@ import (
 func FindTransaction(c *gin.Context) {
 	var NewTransactions *[]entity_transaction.Transaction
 
-	if err := db.DB.Find(&NewTransactions).Error; err != nil {
+	if err := db.GetGormDB().Find(&NewTransactions).Error; err != nil {
 		c.IndentedJSON(http.StatusNoContent, "could not find the transaction")
 		return
 	}
@@ -60,7 +60,7 @@ func beginTransaction(transac *entity_transaction.Transaction) error {
 	var (
 		payerAccount = &entity.Account{}
 		payeeAccount = &entity.Account{}
-		tx           = db.DB.Begin()
+		tx           = db.GetGormDB().Begin()
 	)
 
 	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayer).Find(payerAccount).Error; err != nil {

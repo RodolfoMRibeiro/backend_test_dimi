@@ -10,7 +10,7 @@ import (
 
 func init() {
 	db.Load()
-	seed.Handler(db.DB)
+	seed.Handler(db.GetGormDB())
 }
 
 func main() {

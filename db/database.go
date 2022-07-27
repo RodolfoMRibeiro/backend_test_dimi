@@ -15,7 +15,8 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var db *gorm.DB
+
 var envVars entity_env_vars.EnvironmentVariables
 
 func Load() {
@@ -37,13 +38,13 @@ func connectDatabase() {
 		envVars.Configs,
 	)
 
-	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
+	database, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
 
 	util.PresentatePanicErros(err)
 
-	migrate(db)
+	migrate(database)
 
-	DB = db
+	db = database
 }
 
 func migrate(db *gorm.DB) {
@@ -58,4 +59,8 @@ func migrate(db *gorm.DB) {
 	// db.Table("tb_status").AutoMigrate(&entity_status.Status{})
 	// db.Table("tb_transactions").AutoMigrate(&entity_transaction.Transaction{})
 	// db.Table("tb_users").AutoMigrate(&entity_user.User{})
+}
+
+func GetGormDB() *gorm.DB {
+	return db
 }
