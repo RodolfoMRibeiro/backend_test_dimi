@@ -14,16 +14,14 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-
 	var newUser *entity_user.User = &entity_user.User{}
 
-	if check(c, c.BindJSON(&newUser)) && checkEmailAndCPForCPNJ(newUser) {
-		AddUserToDataBase(c, newUser)
+	if containsError(c, c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
+		AddUserToDatabase(c, newUser)
 	}
 }
 
 func FindUser(c *gin.Context) {
-
 	var newUsers []entity_user.User = []entity_user.User{}
 
 	if err := db.DB.Find(&newUsers).Error; err != nil {
@@ -39,26 +37,20 @@ func FindUser(c *gin.Context) {
 }
 
 func UploadUser(c *gin.Context) {
-
 	var newUser *entity_user.User = &entity_user.User{}
 
-	if check(c, c.BindJSON(&newUser)) && checkEmailAndCPForCPNJ(newUser) {
-		UpdateUserInDataBase(c, newUser)
+	if containsError(c, c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
+		UpdateUserInDatabase(c, newUser)
 	}
 }
 
 func DeleteUser(c *gin.Context) {
-
-	var newUser *entity_user.User = &entity_user.User{}
-
-	if check(c, c.BindJSON(&newUser)) && checkEmailAndCPForCPNJ(newUser) {
-		DeleteUserInDataBase(c, newUser)
-	}
+	c.IndentedJSON(http.StatusNotFound, "Sorry, but this method hasn't been developed yet")
 }
 
 // -------------------------------------------< Aux funcs >------------------------------------------- \\
 
-func check(c *gin.Context, err error) bool {
+func containsError(c *gin.Context, err error) bool {
 	if err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return false
@@ -66,19 +58,18 @@ func check(c *gin.Context, err error) bool {
 	return true
 }
 
-func checkEmailAndCPForCPNJ(u *entity_user.User) (boolean bool) {
-
-	cpfORcnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(u.CpfCnpj)))
+func checkEmailAndCpf_Cnpf(u *entity_user.User) (boolean bool) {
+	cpf_cnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(u.CpfCnpj)))
 	if ok && util.IsEmailValid(util.TrimAllSpacesInString(u.Email)) {
 		boolean = true
-		u.CpfCnpj = cpfORcnpj
+		u.CpfCnpj = cpf_cnpj
 	}
 	return
 }
 
 // -----------------------------------------< feed database >----------------------------------------- \\
 
-func AddUserToDataBase(c *gin.Context, u *entity_user.User) {
+func AddUserToDatabase(c *gin.Context, u *entity_user.User) {
 	if err := db.DB.Table("tb_users").Create(&u).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
@@ -86,7 +77,7 @@ func AddUserToDataBase(c *gin.Context, u *entity_user.User) {
 	c.JSON(http.StatusCreated, u)
 }
 
-func FindUserInDataBase(c *gin.Context, us *[]entity_user.User) {
+func FindUserInDatabase(c *gin.Context, us *[]entity_user.User) {
 	if err := db.DB.Find(us).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
@@ -94,17 +85,12 @@ func FindUserInDataBase(c *gin.Context, us *[]entity_user.User) {
 	c.JSON(http.StatusFound, us)
 }
 
-func UpdateUserInDataBase(c *gin.Context, u *entity_user.User) {
+func UpdateUserInDatabase(c *gin.Context, u *entity_user.User) {
 	if err := db.DB.Table("tb_users").Where("cpf_cnpj = ?", u.CpfCnpj).Updates(&u).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusOK, u)
-}
-
-func DeleteUserInDataBase(c *gin.Context, u *entity_user.User) {
-
-	c.JSON(http.StatusInternalServerError, u)
 }
 
 func GetUserByAccountId(id int) (entity_user.User, error) {
