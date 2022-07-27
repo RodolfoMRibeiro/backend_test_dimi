@@ -11,36 +11,36 @@ import (
 )
 
 func CreateAccount(c *gin.Context) {
-	var NewAccount *entity_account.Account = &entity_account.Account{}
-	if !containsError(c, c.BindJSON(NewAccount)) {
+	var NewAccount *entity_account.Account
+	if !containsError(c, c.BindJSON(&NewAccount)) {
 		AddAccountToDatabase(c, NewAccount)
 	}
 	c.JSON(http.StatusOK, gin.H{"New transaction registred": NewAccount})
 }
 
 func FindAccount(c *gin.Context) {
-	var NewAccounts *[]entity_account.Account = &[]entity_account.Account{}
+	var NewAccounts *[]entity_account.Account
 	FindAccountInDatabase(c, NewAccounts)
 }
 
 func UpdateAccount(c *gin.Context) {
-	var NewAccount *entity_account.Account = &entity_account.Account{}
-	if !containsError(c, c.BindJSON(NewAccount)) {
+	var NewAccount *entity_account.Account
+	if !containsError(c, c.BindJSON(&NewAccount)) {
 		UpdateAccountInDatabase(c, NewAccount)
 	}
 }
 
 func DeleteAccount(c *gin.Context) {
-	var NewAccount *entity_account.Account = &entity_account.Account{}
-	if !containsError(c, c.BindJSON(NewAccount)) {
+	var NewAccount *entity_account.Account
+	if !containsError(c, c.BindJSON(&NewAccount)) {
 		DeleteAccountInDatabase(c, NewAccount)
 	}
 }
 
 func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
-	var NewAccount *entity_account.Account = &entity_account.Account{}
+	var NewAccount *entity_account.Account
 	NewAccount.CpfCnpj = cpf_cnpj
-	if checkCPForCPNJ(NewAccount) && !containsError(c, c.BindJSON(NewAccount)) {
+	if checkCPForCPNJ(NewAccount) && !containsError(c, c.BindJSON(&NewAccount)) {
 		DeleteByCpf_Cnpj(c, NewAccount)
 	}
 }
@@ -82,7 +82,7 @@ func AddAccountToDatabase(c *gin.Context, a *entity_account.Account) {
 }
 
 func FindAccountInDatabase(c *gin.Context, as *[]entity_account.Account) {
-	if err := db.DB.Table(library.TB_ACCOUNTS).Find(as).Error; err != nil {
+	if err := db.DB.Table(library.TB_ACCOUNTS).Find(&as).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -90,7 +90,7 @@ func FindAccountInDatabase(c *gin.Context, as *[]entity_account.Account) {
 }
 
 func UpdateAccountInDatabase(c *gin.Context, a *entity_account.Account) {
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("id = ?", a.Id).Updates(a).Error; err != nil {
+	if err := db.DB.Table(library.TB_ACCOUNTS).Where("id = ?", a.Id).Updates(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -98,7 +98,7 @@ func UpdateAccountInDatabase(c *gin.Context, a *entity_account.Account) {
 }
 
 func DeleteAccountInDatabase(c *gin.Context, a *entity_account.Account) {
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", a.CpfCnpj).Delete(a).Error; err != nil {
+	if err := db.DB.Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -115,8 +115,8 @@ func DeleteByCpf_Cnpj(c *gin.Context, a *entity_account.Account) {
 }
 
 func GetAccountById(id int) (entity_account.Account, error) {
-	var NewAccount *entity_account.Account = &entity_account.Account{}
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("id = ?", id).First(NewAccount).Error; err != nil {
+	var NewAccount *entity_account.Account
+	if err := db.DB.Table(library.TB_ACCOUNTS).Where("id = ?", id).First(&NewAccount).Error; err != nil {
 		return *NewAccount, err
 	}
 	return *NewAccount, nil

@@ -13,14 +13,14 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-	var newUser *entity_user.User = &entity_user.User{}
+	var newUser *entity_user.User
 	if containsError(c, c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
 		AddUserToDatabase(c, newUser)
 	}
 }
 
 func FindUser(c *gin.Context) {
-	var newUsers []entity_user.User = []entity_user.User{}
+	var newUsers []entity_user.User
 	if err := db.DB.Find(&newUsers).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
@@ -33,7 +33,7 @@ func FindUser(c *gin.Context) {
 }
 
 func UploadUser(c *gin.Context) {
-	var newUser *entity_user.User = &entity_user.User{}
+	var newUser *entity_user.User
 	if containsError(c, c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
 		UpdateUserInDatabase(c, newUser)
 	}
