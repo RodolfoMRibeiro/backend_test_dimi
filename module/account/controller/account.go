@@ -13,8 +13,8 @@ func CreateAccount(c *gin.Context) {
 
 	var NewAccount *entity_account.Account = &entity_account.Account{}
 
-	if check(c, c.BindJSON(NewAccount)) {
-		AddAccountToDataBase(c, NewAccount)
+	if !containsError(c, c.BindJSON(NewAccount)) {
+		AddAccountToDatabase(c, NewAccount)
 	}
 
 	c.JSON(http.StatusOK, gin.H{"New transaction registred": NewAccount})
@@ -24,15 +24,15 @@ func FindAccount(c *gin.Context) {
 
 	var NewAccounts *[]entity_account.Account = &[]entity_account.Account{}
 
-	FindAccountInDataBase(c, NewAccounts)
+	FindAccountInDatabase(c, NewAccounts)
 }
 
 func UpdateAccount(c *gin.Context) {
 
 	var NewAccount *entity_account.Account = &entity_account.Account{}
 
-	if check(c, c.BindJSON(NewAccount)) {
-		UpdateAccountInDataBase(c, NewAccount)
+	if !containsError(c, c.BindJSON(NewAccount)) {
+		UpdateAccountInDatabase(c, NewAccount)
 	}
 }
 
@@ -40,8 +40,8 @@ func DeleteAccount(c *gin.Context) {
 
 	var NewAccount *entity_account.Account = &entity_account.Account{}
 
-	if check(c, c.BindJSON(NewAccount)) {
-		DeleteAccountInDataBase(c, NewAccount)
+	if !containsError(c, c.BindJSON(NewAccount)) {
+		DeleteAccountInDatabase(c, NewAccount)
 	}
 }
 
@@ -50,20 +50,20 @@ func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
 	var NewAccount *entity_account.Account = &entity_account.Account{}
 	NewAccount.CpfCnpj = cpf_cnpj
 
-	if checkCPForCPNJ(NewAccount) && check(c, c.BindJSON(NewAccount)) {
-		DeleteEverything(c, NewAccount)
+	if checkCPForCPNJ(NewAccount) && !containsError(c, c.BindJSON(NewAccount)) {
+		DeleteByCpf_Cnpj(c, NewAccount)
 	}
 }
 
 // -------------------------------------------< Aux funcs >------------------------------------------- \\
 
-func check(c *gin.Context, err error) bool {
+func containsError(c *gin.Context, err error) bool {
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 func checkCPForCPNJ(a *entity_account.Account) (boolean bool) {
@@ -87,7 +87,7 @@ func GetAccountsFromUser(cpf_cnpj string) []entity_account.Account {
 
 // -----------------------------------------< feed database >----------------------------------------- \\
 
-func AddAccountToDataBase(c *gin.Context, a *entity_account.Account) {
+func AddAccountToDatabase(c *gin.Context, a *entity_account.Account) {
 
 	if err := db.DB.Table("tb_accounts").Create(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
@@ -96,7 +96,7 @@ func AddAccountToDataBase(c *gin.Context, a *entity_account.Account) {
 	c.JSON(http.StatusCreated, gin.H{"New Account registred": a})
 }
 
-func FindAccountInDataBase(c *gin.Context, as *[]entity_account.Account) {
+func FindAccountInDatabase(c *gin.Context, as *[]entity_account.Account) {
 
 	if err := db.DB.Table("tb_accounts").Find(as).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
@@ -105,7 +105,7 @@ func FindAccountInDataBase(c *gin.Context, as *[]entity_account.Account) {
 	c.JSON(http.StatusFound, as)
 }
 
-func UpdateAccountInDataBase(c *gin.Context, a *entity_account.Account) {
+func UpdateAccountInDatabase(c *gin.Context, a *entity_account.Account) {
 
 	if err := db.DB.Table("tb_accounts").Where("id = ?", a.Id).Updates(a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
@@ -114,7 +114,7 @@ func UpdateAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 	c.JSON(http.StatusOK, a)
 }
 
-func DeleteAccountInDataBase(c *gin.Context, a *entity_account.Account) {
+func DeleteAccountInDatabase(c *gin.Context, a *entity_account.Account) {
 
 	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
@@ -123,7 +123,7 @@ func DeleteAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 	c.JSON(http.StatusOK, gin.H{"Account deleted": a})
 }
 
-func DeleteEverything(c *gin.Context, a *entity_account.Account) {
+func DeleteByCpf_Cnpj(c *gin.Context, a *entity_account.Account) {
 
 	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
