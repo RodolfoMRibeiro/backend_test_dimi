@@ -1,4 +1,4 @@
-package predefinedData
+package seed
 
 import (
 	entity_category "transaction/module/category/entity"
@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Load(db *gorm.DB) {
+func Handler(db *gorm.DB) {
 	populateCategoryData(db)
 	populateStatusData(db)
 }
