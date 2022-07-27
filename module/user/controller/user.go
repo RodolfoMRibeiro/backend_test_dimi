@@ -4,6 +4,9 @@ import (
 	"net/http"
 	"transaction/db"
 
+	// controller_transaction "transaction/module/transaction/controller"
+	"transaction/module/account/controller"
+
 	entity_user "transaction/module/user/entity"
 	"transaction/util"
 
@@ -21,9 +24,18 @@ func CreateUser(c *gin.Context) {
 
 func FindUser(c *gin.Context) {
 
-	var newUsers *[]entity_user.User = &[]entity_user.User{}
+	var newUsers []entity_user.User = []entity_user.User{}
 
-	FindUserInDataBase(c, newUsers)
+	if err := db.DB.Find(&newUsers).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	for i := 0; i < len(newUsers); i++ {
+		newUsers[i].Account = controller.GetAccountsFromUser(newUsers[i].CpfCnpj)
+	}
+
+	c.JSON(http.StatusFound, newUsers)
 }
 
 func UploadUser(c *gin.Context) {
@@ -92,5 +104,20 @@ func UpdateUserInDataBase(c *gin.Context, u *entity_user.User) {
 
 func DeleteUserInDataBase(c *gin.Context, u *entity_user.User) {
 
-	c.JSON(http.StatusOK, u)
+	c.JSON(http.StatusInternalServerError, u)
+}
+
+func GetUserByAccountId(id int) (entity_user.User, error) {
+	var newUser = &entity_user.User{}
+	account, err := controller.GetAccountById(id)
+
+	if err != nil {
+		return *newUser, err
+	}
+
+	if err := db.DB.Table("tb_users").Where("cpf_cnpj = ?", account.CpfCnpj).First(newUser).Error; err != nil {
+		return *newUser, err
+	}
+
+	return *newUser, nil
 }

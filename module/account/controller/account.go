@@ -16,6 +16,8 @@ func CreateAccount(c *gin.Context) {
 	if check(c, c.BindJSON(NewAccount)) {
 		AddAccountToDataBase(c, NewAccount)
 	}
+
+	c.JSON(http.StatusOK, gin.H{"New transaction registred": NewAccount})
 }
 
 func FindAccount(c *gin.Context) {
@@ -73,6 +75,16 @@ func checkCPForCPNJ(a *entity_account.Account) (boolean bool) {
 	return
 }
 
+func GetAccountsFromUser(cpf_cnpj string) []entity_account.Account {
+	var NewAccounts []entity_account.Account = []entity_account.Account{}
+
+	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", cpf_cnpj).Find(&NewAccounts).Error; err != nil {
+		return nil
+	}
+
+	return NewAccounts
+}
+
 // -----------------------------------------< feed database >----------------------------------------- \\
 
 func AddAccountToDataBase(c *gin.Context, a *entity_account.Account) {
@@ -104,7 +116,7 @@ func UpdateAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 
 func DeleteAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 
-	if err := db.DB.Table("tb_accounts").Where("id = ?", a.Id).Delete(a).Error; err != nil {
+	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -113,9 +125,18 @@ func DeleteAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 
 func DeleteEverything(c *gin.Context, a *entity_account.Account) {
 
-	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(a).Error; err != nil {
+	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"Account deleted": a})
+}
+
+func GetAccountById(id int) (entity_account.Account, error) {
+	var NewAccount *entity_account.Account = &entity_account.Account{}
+
+	if err := db.DB.Table("tb_accounts").Where("id = ?", id).First(NewAccount).Error; err != nil {
+		return *NewAccount, err
+	}
+	return *NewAccount, nil
 }
