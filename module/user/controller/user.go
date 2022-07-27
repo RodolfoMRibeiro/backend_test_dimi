@@ -6,6 +6,7 @@ import (
 	"transaction/db"
 
 	// controller_transaction "transaction/module/transaction/controller"
+	"transaction/module/account/controller"
 	entity_user "transaction/module/user/entity"
 	"transaction/util"
 
@@ -64,4 +65,19 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusNotAcceptable, gin.H{"Warning": "contact our reponsible sector to accomplish the action"})
+}
+
+func GetUserByAccountId(id int) (entity_user.User, error) {
+	var newUser = &entity_user.User{}
+	account, err := controller.GetAccountById(id)
+
+	if err != nil {
+		return *newUser, err
+	}
+
+	if err := db.DB.Table("tb_users").Where("cpf_cnpj = ?", account.CpfCnpj).First(newUser).Error; err != nil {
+		return *newUser, err
+	}
+
+	return *newUser, nil
 }

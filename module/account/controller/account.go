@@ -20,7 +20,7 @@ func CreateAccount(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"New user registred": NewAccount})
+	c.JSON(http.StatusOK, gin.H{"New transaction registred": NewAccount})
 }
 
 func FindAccount(c *gin.Context) {
