@@ -1,4 +1,4 @@
-package predefinedData
+package seed
 
 import (
 	entity_category "transaction/module/category/entity"
@@ -9,12 +9,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func Load(db *gorm.DB) {
-	categoryData(db)
-	statusData(db)
+func Handler(db *gorm.DB) {
+	populateCategoryData(db)
+	populateStatusData(db)
 }
 
-func categoryData(db *gorm.DB) {
+func populateCategoryData(db *gorm.DB) {
 	categories := []entity_category.Category{
 		{Id: 1, Name: "Lojista", Users: []entity_user.User{}},
 		{Id: 2, Name: "Comum", Users: []entity_user.User{}},
@@ -27,7 +27,7 @@ func categoryData(db *gorm.DB) {
 	}
 }
 
-func statusData(db *gorm.DB) {
+func populateStatusData(db *gorm.DB) {
 	statusArr := []entity_status.Status{
 		{Id: 1, Name: "Autorizado", Transaction: []entity_transaction.Transaction{}},
 		{Id: 2, Name: "Não Autorizado", Transaction: []entity_transaction.Transaction{}},
