@@ -5,9 +5,7 @@ import (
 	"transaction/db"
 	"transaction/library"
 
-	// controller_transaction "transaction/module/transaction/controller"
 	"transaction/module/account/controller"
-
 	entity_user "transaction/module/user/entity"
 	"transaction/util"
 
@@ -16,7 +14,6 @@ import (
 
 func CreateUser(c *gin.Context) {
 	var newUser *entity_user.User = &entity_user.User{}
-
 	if containsError(c, c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
 		AddUserToDatabase(c, newUser)
 	}
@@ -24,7 +21,6 @@ func CreateUser(c *gin.Context) {
 
 func FindUser(c *gin.Context) {
 	var newUsers []entity_user.User = []entity_user.User{}
-
 	if err := db.DB.Find(&newUsers).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
@@ -33,13 +29,11 @@ func FindUser(c *gin.Context) {
 	for i := 0; i < len(newUsers); i++ {
 		newUsers[i].Account = controller.GetAccountsFromUser(newUsers[i].CpfCnpj)
 	}
-
 	c.JSON(http.StatusFound, newUsers)
 }
 
 func UploadUser(c *gin.Context) {
 	var newUser *entity_user.User = &entity_user.User{}
-
 	if containsError(c, c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
 		UpdateUserInDatabase(c, newUser)
 	}
@@ -105,6 +99,5 @@ func GetUserByAccountId(id int) (entity_user.User, error) {
 	if err := db.DB.Table(library.TB_USERS).Where("cpf_cnpj = ?", account.CpfCnpj).First(newUser).Error; err != nil {
 		return *newUser, err
 	}
-
 	return *newUser, nil
 }

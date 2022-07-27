@@ -6,28 +6,22 @@ import (
 	"regexp"
 	"strings"
 
-	// "github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin"
 	"github.com/paemuri/brdoc"
 )
 
 func TrimAllSpacesInString(str string) string {
-
 	return fmt.Sprint(strings.Replace(str, " ", "", -1))
 }
 
+// take care about some UTF-8 characters ( ex.: á ç õ ù... )
 func RevomeSpecialChars(str string) string {
-	// take care about some UTF-8 characters ( ex.: á ç õ ù... )
-
 	regx := regexp.MustCompile(`[^ A-Za-z0-9]`)
-
 	return fmt.Sprint(regx.ReplaceAllString(str, ""))
 }
 
 func LetOnlyNumbers(str string) string {
-
 	regx := regexp.MustCompile(`[^ 0-9]`)
-
 	return fmt.Sprint(regx.ReplaceAllString(str, ""))
 }
 
