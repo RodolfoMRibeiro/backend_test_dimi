@@ -116,7 +116,7 @@ func UpdateAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 
 func DeleteAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 
-	if err := db.DB.Table("tb_accounts").Where("id = ?", a.Id).Delete(a).Error; err != nil {
+	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -125,7 +125,7 @@ func DeleteAccountInDataBase(c *gin.Context, a *entity_account.Account) {
 
 func DeleteEverything(c *gin.Context, a *entity_account.Account) {
 
-	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(a).Error; err != nil {
+	if err := db.DB.Table("tb_accounts").Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}

@@ -104,7 +104,7 @@ func UpdateUserInDataBase(c *gin.Context, u *entity_user.User) {
 
 func DeleteUserInDataBase(c *gin.Context, u *entity_user.User) {
 
-	c.JSON(http.StatusOK, u)
+	c.JSON(http.StatusInternalServerError, u)
 }
 
 func GetUserByAccountId(id int) (entity_user.User, error) {
