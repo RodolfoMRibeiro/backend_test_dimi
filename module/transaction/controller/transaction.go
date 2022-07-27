@@ -1,32 +1,100 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 	"transaction/db"
+	"transaction/module/account/entity"
 	entity_transaction "transaction/module/transaction/entity"
+	"transaction/module/user/controller"
 
 	"github.com/gin-gonic/gin"
 )
 
-var NewTransaction *entity_transaction.Transaction
+//sei que está errado não realizar a consulta no banco, refarei depois
 
-var NewTransactions *[]entity_transaction.Transaction
+func FindTransaction(c *gin.Context) {
+	var NewTransactions *[]entity_transaction.Transaction
+
+	if err := db.DB.Find(&NewTransactions).Error; err != nil {
+		c.IndentedJSON(http.StatusNoContent, "could not find the transaction")
+		return
+	}
+
+	c.JSON(http.StatusOK, NewTransactions)
+}
 
 func CreateTransaction(c *gin.Context) {
-
+	var NewTransaction *entity_transaction.Transaction
 	if err := c.BindJSON(&NewTransaction); err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
 
-	// db.DB.Joins("FROM tb_transactions A RIGHT JOIN tb_accounts ON A.id_payer = ?").Where(NewTransaction.IdPayer).Find(&controller_account.NewAccount)
+	NewTransaction.ValidateTransaction()
 
-	// c.JSON(http.StatusOK, gin.H{"New user registred": controller_account.NewAccount})
+	//vou arrumar essa porcaria de 1 depois --> clean code prega a destruição de magic numbers
+	if NewTransaction.IdPayer != NewTransaction.IdPayee && NewTransaction.IdStatus == 1 && !isLojista(NewTransaction.IdPayer) {
+		if err := beginTransaction(NewTransaction); err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, err)
+			return
+		}
 
+		c.JSON(http.StatusOK, gin.H{"New user registred": NewTransaction})
+	} else {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Ops! something went wrong"})
+	}
 }
 
-func FindTransaction(c *gin.Context) {
+func isLojista(AccountId int) bool {
+	user, _ := controller.GetUserByAccountId(AccountId)
+	if user.IdCategory == 1 {
+		return true
+	} else {
+		return false
+	}
+}
 
-	db.DB.Find(&NewTransactions)
-	c.JSON(http.StatusOK, NewTransactions)
+//Perdão por esse código imenso e com esse bando de validações que ferem os princípios do código limpo
+func beginTransaction(transac *entity_transaction.Transaction) error {
+	var (
+		payerAccount = &entity.Account{}
+		payeeAccount = &entity.Account{}
+	)
+	tx := db.DB.Begin()
+
+	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayer).Find(payerAccount).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayee).Find(payeeAccount).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if payerAccount.Balance < transac.Value {
+		tx.Rollback()
+		return errors.New("insuficient Balance")
+	}
+	payerAccount.Balance = payerAccount.Balance - transac.Value
+	payeeAccount.Balance = payeeAccount.Balance + transac.Value
+
+	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayer).Updates(payerAccount).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Table("tb_transactions").Create(transac).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
+	return nil
 }

@@ -4,6 +4,10 @@ import (
 	"net/http"
 	"transaction/db"
 
+
+	// controller_transaction "transaction/module/transaction/controller"
+	"transaction/module/account/controller"
+
 	entity_user "transaction/module/user/entity"
 	"transaction/util"
 
@@ -93,4 +97,19 @@ func UpdateUserInDataBase(c *gin.Context, u *entity_user.User) {
 func DeleteUserInDataBase(c *gin.Context, u *entity_user.User) {
 
 	c.JSON(http.StatusOK, u)
+}
+
+func GetUserByAccountId(id int) (entity_user.User, error) {
+	var newUser = &entity_user.User{}
+	account, err := controller.GetAccountById(id)
+
+	if err != nil {
+		return *newUser, err
+	}
+
+	if err := db.DB.Table("tb_users").Where("cpf_cnpj = ?", account.CpfCnpj).First(newUser).Error; err != nil {
+		return *newUser, err
+	}
+
+	return *newUser, nil
 }
