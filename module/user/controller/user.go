@@ -45,12 +45,7 @@ func UploadUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	var newUser *entity_user.User = &entity_user.User{}
-
-	if containsError(c, c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
-		// DeleteUserInDatabase(c, newUser)
-		c.IndentedJSON(http.StatusNotFound, "Sorry, but this method hasn't been developed yet")
-	}
+	c.IndentedJSON(http.StatusNotFound, "Sorry, but this method hasn't been developed yet")
 }
 
 // -------------------------------------------< Aux funcs >------------------------------------------- \\
@@ -97,11 +92,6 @@ func UpdateUserInDatabase(c *gin.Context, u *entity_user.User) {
 	}
 	c.JSON(http.StatusOK, u)
 }
-
-// func DeleteUserInDatabase(c *gin.Context, u *entity_user.User) {
-
-// 	c.JSON(http.StatusInternalServerError, u)
-// }
 
 func GetUserByAccountId(id int) (entity_user.User, error) {
 	var newUser = &entity_user.User{}
