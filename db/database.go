@@ -38,7 +38,7 @@ func ConnectDatabase() {
 
 	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
 
-	util.PresentatePanicErros(err)
+	util.PresentateErros(err)
 
 	loadMigrations(db)
 
