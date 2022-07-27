@@ -73,7 +73,7 @@ func AddUserToDatabase(c *gin.Context, u *entity_user.User) {
 }
 
 func FindUserInDatabase(c *gin.Context, us *[]entity_user.User) {
-	if err := db.DB.Find(us).Error; err != nil {
+	if err := db.DB.Find(&us).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
