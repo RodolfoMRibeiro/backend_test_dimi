@@ -60,8 +60,8 @@ func beginTransaction(transac *entity_transaction.Transaction) error {
 	var (
 		payerAccount = &entity.Account{}
 		payeeAccount = &entity.Account{}
+		tx           = db.DB.Begin()
 	)
-	tx := db.DB.Begin()
 
 	if err := tx.Table("tb_accounts").Where("id = ?", transac.IdPayer).Find(payerAccount).Error; err != nil {
 		tx.Rollback()
