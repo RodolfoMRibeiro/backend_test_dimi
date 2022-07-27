@@ -29,7 +29,7 @@ func CreateTransaction(c *gin.Context) {
 	}
 	NewTransaction.ValidateTransaction()
 
-	if NewTransaction.IdPayer != NewTransaction.IdPayee && NewTransaction.IdStatus == 1 && !isLojista(NewTransaction.IdPayer) {
+	if NewTransaction.IdPayer != NewTransaction.IdPayee && NewTransaction.IdStatus == library.STORE_KEEPER_STATUS && !isLojista(NewTransaction.IdPayer) {
 		if err := beginTransaction(NewTransaction); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 			return
