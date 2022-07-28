@@ -5,7 +5,6 @@ go 1.18
 require github.com/joho/godotenv v1.4.0
 
 require (
-	github.com/caarlos0/env/v6 v6.9.3
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/assert v1.2.1
 	github.com/paemuri/brdoc v1.1.2

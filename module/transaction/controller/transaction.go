@@ -7,7 +7,7 @@ import (
 	"transaction/library"
 	"transaction/module/account/entity"
 	entity_transaction "transaction/module/transaction/entity"
-	"transaction/module/user/controller"
+	"transaction/module/user/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -41,7 +41,7 @@ func CreateTransaction(c *gin.Context) {
 }
 
 func isLojista(AccountId int) bool {
-	user, _ := controller.GetUserByAccountId(AccountId)
+	user, _ := service.GetUserByAccountId(AccountId)
 	if user.IdCategory == 1 {
 		return true
 	} else {

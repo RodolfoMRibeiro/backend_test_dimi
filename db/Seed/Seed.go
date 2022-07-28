@@ -1,6 +1,7 @@
 package seed
 
 import (
+	"fmt"
 	"transaction/library"
 	entity_category "transaction/module/category/entity"
 	entity_status "transaction/module/status/entity"
@@ -11,6 +12,7 @@ import (
 )
 
 func Handler(db *gorm.DB) {
+
 	populateCategoryData(db)
 	populateStatusData(db)
 }
@@ -22,6 +24,7 @@ func populateCategoryData(db *gorm.DB) {
 	}
 
 	for _, category := range categories {
+		fmt.Println("passou")
 		if err := db.Table(library.TB_CATEGORIES).Create(&category).Error; err != nil {
 			break
 		}
