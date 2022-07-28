@@ -11,6 +11,7 @@ import (
 )
 
 func Handler(db *gorm.DB) {
+
 	populateCategoryData(db)
 	populateStatusData(db)
 }
@@ -22,7 +23,7 @@ func populateCategoryData(db *gorm.DB) {
 	}
 
 	for _, category := range categories {
-		if err := db.Table(library.TB_CATEGORIES).Create(&category).Error; err != nil {
+		if err := db.Table(library.TB_CATEGORIES).Create(category).Error; err != nil {
 			break
 		}
 	}
