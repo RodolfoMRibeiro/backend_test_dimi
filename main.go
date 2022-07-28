@@ -2,23 +2,18 @@ package main
 
 import (
 	"fmt"
-	"os"
 	config "transaction/configs"
 	"transaction/db"
 	seed "transaction/db/Seed"
 	"transaction/routes"
-
-	"github.com/gin-gonic/gin"
+	"transaction/server"
 )
 
-func init() {
-	config.Load()
-}
-
 func main() {
+	config.Load()
+	db.StartDatabase()
 	seed.Handler(db.GetGormDB())
-
-	router := gin.Default()
-	routes.Avaiable(router)
-	router.Run(fmt.Sprintf("%s:%s", os.Getenv("SERVER_HOST"), os.Getenv("SERVER_PORT")))
+	createdServer := server.CreateServer()
+	routes.Avaiable(createdServer.GetServerEngine())
+	createdServer.GetServerEngine().Run(fmt.Sprintf("%s:%s", config.Server.HOST, config.Server.PORT))
 }

@@ -1,54 +1,32 @@
 package db
 
 import (
-	"fmt"
-	config "transaction/configs"
-	entity_account "transaction/module/account/entity"
-	entity_category "transaction/module/category/entity"
-	entity_status "transaction/module/status/entity"
-	entity_transaction "transaction/module/transaction/entity"
-	entity_user "transaction/module/user/entity"
-	"transaction/util"
+	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
-func Load() {
-	connectDatabase()
+type Mysql struct {
+	db            *gorm.DB
+	configuration string
 }
 
-func connectDatabase() {
-	databaseStringConfig := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s%s",
-
-		config.Mysql.USER,
-		config.Mysql.PASSWORD,
-		config.Mysql.HOST,
-		config.Mysql.PORT,
-		config.Mysql.DB,
-		config.Mysql.ADDITIONAL_CONFIGS,
-	)
-
-	database, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
-
-	util.PresentateErros(err)
-
-	loadMigrations(database)
-
-	db = database
+func NewMysql(config string) *Mysql {
+	mysql := &Mysql{
+		db:            &gorm.DB{},
+		configuration: config,
+	}
+	return mysql
 }
 
-func loadMigrations(db *gorm.DB) {
-	db.AutoMigrate(&entity_account.Account{})
-	db.AutoMigrate(&entity_category.Category{})
-	db.AutoMigrate(&entity_status.Status{})
-	db.AutoMigrate(&entity_transaction.Transaction{})
-	db.AutoMigrate(&entity_user.User{})
-}
+func (m *Mysql) connect() error {
+	var err error
+	m.db, err = gorm.Open(mysql.Open(m.configuration), &gorm.Config{})
 
-func GetGormDB() *gorm.DB {
-	return db
+	if err != nil {
+		log.Fatal("Error connecting to database")
+	}
+
+	return nil
 }
