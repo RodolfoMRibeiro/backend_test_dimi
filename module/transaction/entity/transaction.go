@@ -24,7 +24,6 @@ func (Transaction) TableName() string {
 func (t *Transaction) ValidateTransaction() {
 	var transacStatus = integrations.TransactionStatus{}
 	transacStatus.ConnectWithExternalAPI()
-
 	if transacStatus.Authorization {
 		t.IdStatus = 1
 	} else {

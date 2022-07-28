@@ -15,9 +15,13 @@ func init() {
 	config.Load()
 	db.Load()
 	seed.Handler(db.DB)
+
 }
 
 func main() {
+	db.ConnectDatabase()
+	seed.Handler(db.DB)
+
 	router := gin.Default()
 	routes.Avaiable(router)
 	router.Run(fmt.Sprintf("%s:%s", os.Getenv("SERVER_HOST"), os.Getenv("SERVER_PORT")))
