@@ -21,7 +21,7 @@ func CreateUser(c *gin.Context) {
 
 func FindUser(c *gin.Context) {
 	var newUsers []entity_user.User
-	if err := db.DB.Find(&newUsers).Error; err != nil {
+	if err := db.GetGormDB().Find(&newUsers).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -65,7 +65,7 @@ func checkEmailAndCpf_Cnpf(u *entity_user.User) (boolean bool) {
 // -----------------------------------------< feed database >----------------------------------------- \\
 
 func AddUserToDatabase(c *gin.Context, u *entity_user.User) {
-	if err := db.DB.Table(library.TB_USERS).Create(&u).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_USERS).Create(&u).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -73,7 +73,7 @@ func AddUserToDatabase(c *gin.Context, u *entity_user.User) {
 }
 
 func FindUserInDatabase(c *gin.Context, us *[]entity_user.User) {
-	if err := db.DB.Find(&us).Error; err != nil {
+	if err := db.GetGormDB().Find(&us).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -81,7 +81,7 @@ func FindUserInDatabase(c *gin.Context, us *[]entity_user.User) {
 }
 
 func UpdateUserInDatabase(c *gin.Context, u *entity_user.User) {
-	if err := db.DB.Table(library.TB_USERS).Where("cpf_cnpj = ?", u.CpfCnpj).Updates(&u).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_USERS).Where("cpf_cnpj = ?", u.CpfCnpj).Updates(&u).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -96,7 +96,7 @@ func GetUserByAccountId(id int) (entity_user.User, error) {
 		return *newUser, err
 	}
 
-	if err := db.DB.Table(library.TB_USERS).Where("cpf_cnpj = ?", account.CpfCnpj).First(newUser).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_USERS).Where("cpf_cnpj = ?", account.CpfCnpj).First(newUser).Error; err != nil {
 		return *newUser, err
 	}
 	return *newUser, nil

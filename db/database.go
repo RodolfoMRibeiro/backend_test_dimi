@@ -14,14 +14,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
-
+var db *gorm.DB
 
 func Load() {
 	connectDatabase()
 }
 
-func ConnectDatabase() {
+func connectDatabase() {
 	databaseStringConfig := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s%s",
 
@@ -33,13 +32,13 @@ func ConnectDatabase() {
 		config.Mysql.ADDITIONAL_CONFIGS,
 	)
 
-	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
+	database, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})
 
 	util.PresentateErros(err)
 
-	loadMigrations(db)
+	loadMigrations(database)
 
-	DB = db
+	db = database
 }
 
 func loadMigrations(db *gorm.DB) {
@@ -48,4 +47,8 @@ func loadMigrations(db *gorm.DB) {
 	db.AutoMigrate(&entity_status.Status{})
 	db.AutoMigrate(&entity_transaction.Transaction{})
 	db.AutoMigrate(&entity_user.User{})
+}
+
+func GetGormDB() *gorm.DB {
+	return db
 }

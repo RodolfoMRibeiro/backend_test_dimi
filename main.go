@@ -13,14 +13,10 @@ import (
 
 func init() {
 	config.Load()
-	db.Load()
-	seed.Handler(db.DB)
-
 }
 
 func main() {
-	db.ConnectDatabase()
-	seed.Handler(db.DB)
+	seed.Handler(db.GetGormDB())
 
 	router := gin.Default()
 	routes.Avaiable(router)
