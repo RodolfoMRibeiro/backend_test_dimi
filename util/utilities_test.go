@@ -1,6 +1,7 @@
 package util
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -94,5 +95,16 @@ func TestVerifyingCPForCNPJ(t *testing.T) {
 		expectedValidation := false
 
 		assert.Equal(t, expectedValidation, recivedDocValidation)
+	})
+}
+
+func TestContainsError(t *testing.T) {
+	t.Run("there is error", func(t *testing.T) {
+		var err = errors.New("erro")
+		expectedResult := true
+
+		recievedResult := ContainsError(err)
+
+		assert.Equal(t, expectedResult, recievedResult)
 	})
 }

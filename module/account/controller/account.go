@@ -12,7 +12,7 @@ import (
 
 func CreateAccount(c *gin.Context) {
 	var NewAccount *entity_account.Account
-	if !containsError(c, c.BindJSON(&NewAccount)) {
+	if !containsError(c.BindJSON(&NewAccount)) {
 		AddAccountToDatabase(c, NewAccount)
 	}
 	c.JSON(http.StatusOK, gin.H{"New transaction registred": NewAccount})
@@ -25,14 +25,14 @@ func FindAccount(c *gin.Context) {
 
 func UpdateAccount(c *gin.Context) {
 	var NewAccount *entity_account.Account
-	if !containsError(c, c.BindJSON(&NewAccount)) {
+	if !containsError(c.BindJSON(&NewAccount)) {
 		UpdateAccountInDatabase(c, NewAccount)
 	}
 }
 
 func DeleteAccount(c *gin.Context) {
 	var NewAccount *entity_account.Account
-	if !containsError(c, c.BindJSON(&NewAccount)) {
+	if !containsError(c.BindJSON(&NewAccount)) {
 		DeleteAccountInDatabase(c, NewAccount)
 	}
 }
@@ -40,19 +40,19 @@ func DeleteAccount(c *gin.Context) {
 func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
 	var NewAccount *entity_account.Account
 	NewAccount.CpfCnpj = cpf_cnpj
-	if checkCPForCPNJ(NewAccount) && !containsError(c, c.BindJSON(&NewAccount)) {
+	if checkCPForCPNJ(NewAccount) && !containsError(c.BindJSON(&NewAccount)) {
 		DeleteByCpf_Cnpj(c, NewAccount)
 	}
 }
 
 // -------------------------------------------< Aux funcs >------------------------------------------- \\
 
-func containsError(c *gin.Context, err error) bool {
+func containsError(err error) bool {
 	if err != nil {
-		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return true
+	} else {
+		return false
 	}
-	return false
 }
 
 func checkCPForCPNJ(a *entity_account.Account) (boolean bool) {

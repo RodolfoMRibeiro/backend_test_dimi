@@ -55,3 +55,11 @@ func BadRequest(c *gin.Context, err error) {
 		return
 	}
 }
+
+func ContainsError(err error) bool {
+	if err != nil {
+		return true
+	} else {
+		return false
+	}
+}
