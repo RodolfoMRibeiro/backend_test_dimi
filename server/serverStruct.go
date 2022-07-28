@@ -17,6 +17,10 @@ func NewServer() *Server {
 	return newServer
 }
 
+func (s Server) GetServerEngine() *gin.Engine {
+	return s.serverEngine
+}
+
 func (s *Server) SetPort(port string) {
 	s.port = port
 }
