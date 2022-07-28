@@ -29,12 +29,12 @@ func connectDatabase() {
 
 		"%s:%s@tcp(%s:%s)/%s%s",
 
-		envVars.User,
-		envVars.Password,
-		envVars.Host,
-		envVars.Port,
+		envVars.DbUser,
+		envVars.DbPassword,
+		envVars.DbHost,
+		envVars.DbPort,
 		envVars.Database,
-		envVars.Configs,
+		envVars.DbConfigs,
 	)
 
 	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})

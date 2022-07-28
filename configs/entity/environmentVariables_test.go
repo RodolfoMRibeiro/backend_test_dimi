@@ -16,12 +16,12 @@ func TestEnvironmentVariables(t *testing.T) {
 		recivedStruct.setWithEnvFile()
 
 		expectedStruct := EnvironmentVariables{
-			Database: os.Getenv("DATABASE"),
-			Port:     os.Getenv("DB_PORT"),
-			Host:     os.Getenv("DB_HOST"),
-			User:     os.Getenv("DB_USER"),
-			Password: os.Getenv("DB_PASSWORD"),
-			Configs:  os.Getenv("DB_CONFIGS"),
+			Database:   os.Getenv("DATABASE"),
+			DbPort:     os.Getenv("DB_PORT"),
+			DbHost:     os.Getenv("DB_HOST"),
+			DbUser:     os.Getenv("DB_USER"),
+			DbPassword: os.Getenv("DB_PASSWORD"),
+			DbConfigs:  os.Getenv("DB_CONFIGS"),
 		}
 
 		assert.Equal(t, expectedStruct, recivedStruct)
@@ -34,12 +34,12 @@ func TestEnvironmentVariables(t *testing.T) {
 		recivedStruct.FeedStruct()
 
 		expectedStruct := EnvironmentVariables{
-			Database: os.Getenv("DATABASE"),
-			Port:     os.Getenv("DB_PORT"),
-			Host:     os.Getenv("DB_HOST"),
-			User:     os.Getenv("DB_USER"),
-			Password: os.Getenv("DB_PASSWORD"),
-			Configs:  os.Getenv("DB_CONFIGS"),
+			Database:   os.Getenv("DATABASE"),
+			DbPort:     os.Getenv("DB_PORT"),
+			DbHost:     os.Getenv("DB_HOST"),
+			DbUser:     os.Getenv("DB_USER"),
+			DbPassword: os.Getenv("DB_PASSWORD"),
+			DbConfigs:  os.Getenv("DB_CONFIGS"),
 		}
 
 		assert.Equal(t, expectedStruct, recivedStruct)

@@ -5,12 +5,14 @@ import (
 )
 
 type EnvironmentVariables struct {
-	Database string `env:"DATABASE"`
-	Port     string `env:"DB_PORT" envDefault:"3306"`
-	Host     string `env:"DB_HOST"`
-	User     string `env:"DB_USER"`
-	Password string `env:"DB_PASSWORD"`
-	Configs  string `env:"DB_CONFIGS"`
+	Database   string `env:"DATABASE"`
+	DbPort     string `env:"DB_PORT" envDefault:"3306"`
+	DbHost     string `env:"DB_HOST"`
+	DbUser     string `env:"DB_USER"`
+	DbPassword string `env:"DB_PASSWORD"`
+	DbConfigs  string `env:"DB_CONFIGS"`
+	ServerPort string `env:"SERVER_PORT"`
+	ServerHost string `env:"SERVER_HOST"`
 }
 
 func (env *EnvironmentVariables) FeedStruct() {
