@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -9,6 +10,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/paemuri/brdoc"
 )
+
+func ParseMapToJson(mp map[string]string) string {
+	str, _ := json.Marshal(mp)
+	return string(str)
+}
 
 func TrimAllSpacesInString(str string) string {
 	return fmt.Sprint(strings.Replace(str, " ", "", -1))
