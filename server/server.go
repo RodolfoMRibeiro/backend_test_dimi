@@ -1,13 +1,13 @@
 package server
 
 import (
-	"transaction/configs"
+	config "transaction/configs"
 )
 
-func CreateServer(envVars configs.EnvironmentVariables) *Server {
+func CreateServer() *Server {
 	server := NewServer()
 
-	server.SetPort(envVars.ServerPort)
-	server.SetHost(envVars.ServerHost)
+	server.SetPort(config.Server.PORT)
+	server.SetHost(config.Server.HOST)
 	return server
 }

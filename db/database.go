@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	entity_env_vars "transaction/configs"
+	config "transaction/configs"
 	entity_account "transaction/module/account/entity"
 	entity_category "transaction/module/category/entity"
 	entity_status "transaction/module/status/entity"
@@ -10,31 +10,26 @@ import (
 	entity_user "transaction/module/user/entity"
 	"transaction/util"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
-var envVars entity_env_vars.EnvironmentVariables
 
 func Load() {
-	godotenv.Load(".env")
-	envVars.FeedStruct()
 	connectDatabase()
 }
 
 func connectDatabase() {
 	databaseStringConfig := fmt.Sprintf(
-
 		"%s:%s@tcp(%s:%s)/%s%s",
 
-		envVars.DbUser,
-		envVars.DbPassword,
-		envVars.DbHost,
-		envVars.DbPort,
-		envVars.Database,
-		envVars.DbConfigs,
+		config.Mysql.USER,
+		config.Mysql.PASSWORD,
+		config.Mysql.HOST,
+		config.Mysql.PORT,
+		config.Mysql.DB,
+		config.Mysql.ADDITIONAL_CONFIGS,
 	)
 
 	db, err := gorm.Open(mysql.Open(databaseStringConfig), &gorm.Config{})

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	config "transaction/configs"
 	"transaction/db"
 	seed "transaction/db/Seed"
 	"transaction/routes"
@@ -11,6 +12,7 @@ import (
 )
 
 func init() {
+	config.Load()
 	db.Load()
 	seed.Handler(db.DB)
 }
