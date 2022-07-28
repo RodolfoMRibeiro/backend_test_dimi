@@ -65,7 +65,7 @@ func checkCPForCPNJ(a *entity_account.Account) (boolean bool) {
 
 func GetAccountsFromUser(cpf_cnpj string) []entity_account.Account {
 	var NewAccounts []entity_account.Account = []entity_account.Account{}
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", cpf_cnpj).Find(&NewAccounts).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", cpf_cnpj).Find(&NewAccounts).Error; err != nil {
 		return nil
 	}
 	return NewAccounts
@@ -74,7 +74,7 @@ func GetAccountsFromUser(cpf_cnpj string) []entity_account.Account {
 // -----------------------------------------< feed database >----------------------------------------- \\
 
 func AddAccountToDatabase(c *gin.Context, a *entity_account.Account) {
-	if err := db.DB.Table(library.TB_ACCOUNTS).Create(&a).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -82,7 +82,7 @@ func AddAccountToDatabase(c *gin.Context, a *entity_account.Account) {
 }
 
 func FindAccountInDatabase(c *gin.Context, as *[]entity_account.Account) {
-	if err := db.DB.Table(library.TB_ACCOUNTS).Find(&as).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Find(&as).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -90,7 +90,7 @@ func FindAccountInDatabase(c *gin.Context, as *[]entity_account.Account) {
 }
 
 func UpdateAccountInDatabase(c *gin.Context, a *entity_account.Account) {
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("id = ?", a.Id).Updates(&a).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", a.Id).Updates(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -98,7 +98,7 @@ func UpdateAccountInDatabase(c *gin.Context, a *entity_account.Account) {
 }
 
 func DeleteAccountInDatabase(c *gin.Context, a *entity_account.Account) {
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -107,7 +107,7 @@ func DeleteAccountInDatabase(c *gin.Context, a *entity_account.Account) {
 
 func DeleteByCpf_Cnpj(c *gin.Context, a *entity_account.Account) {
 
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -116,7 +116,7 @@ func DeleteByCpf_Cnpj(c *gin.Context, a *entity_account.Account) {
 
 func GetAccountById(id int) (entity_account.Account, error) {
 	var NewAccount *entity_account.Account
-	if err := db.DB.Table(library.TB_ACCOUNTS).Where("id = ?", id).First(&NewAccount).Error; err != nil {
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", id).First(&NewAccount).Error; err != nil {
 		return *NewAccount, err
 	}
 	return *NewAccount, nil
