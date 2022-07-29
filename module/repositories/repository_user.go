@@ -7,7 +7,16 @@ import (
 	model "transaction/module/models"
 )
 
+type IUserReferences interface {
+	AddUserToDatabase() error
+	FindUsersInDatabase() error
+	UpdateUserInDatabase() error
+	GetUserByAccountId() error
+	GetAccountsFromUser() error
+}
+
 type UserReferences struct {
+	IUserReferences
 	User  *model.User
 	Users *[]model.User
 }
