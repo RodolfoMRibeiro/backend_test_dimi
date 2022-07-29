@@ -13,7 +13,7 @@ import (
 func CreateUser(c *gin.Context) {
 	var new *repository.UserReferences
 
-	if util.ContainsError(c.BindJSON(&new.User)) && service.CheckEmailAndCpf_Cnpf(new.User) {
+	if !util.ContainsError(c.BindJSON(&new.User)) && service.CheckEmailAndCpf_Cnpf(new.User) {
 		err := new.AddUserToDatabase(c)
 		service.FoundOrNotStatusReturn(err, c, new.User)
 	}
@@ -22,22 +22,22 @@ func CreateUser(c *gin.Context) {
 func FindUser(c *gin.Context) {
 	var registred repository.UserReferences
 
-	if err := registred.FindUserInDatabase(c); err != nil {
-		return
-	} else {
+	err := registred.FindUsersInDatabase(c)
+	service.FoundOrNotStatusReturn(err, c, registred.Users)
 
-		for _, userRegistred := range *registred.Users {
-			userRegistred.Account = repository.GetAccountsFromUser(userRegistred.CpfCnpj)
-		}
-		service.FoundOrNotStatusReturn(err, c, registred.Users)
+	for _, userRegistred := range *registred.Users {
+		userRegistred.Account = repository.GetAccountsFromUser(userRegistred.CpfCnpj)
 	}
+	service.FoundOrNotStatusReturn(err, c, registred.Users)
+
 }
 
 func UploadUser(c *gin.Context) {
 	var registred *repository.UserReferences
 
-	if util.ContainsError(c.BindJSON(&registred.User)) && service.CheckEmailAndCpf_Cnpf(registred.User) {
-		registred.UpdateUserInDatabase(c)
+	if !util.ContainsError(c.BindJSON(&registred.User)) && service.CheckEmailAndCpf_Cnpf(registred.User) {
+		err := registred.UpdateUserInDatabase(c)
+		service.ModifiedOrNotStatusReturn(err, c, registred.User)
 	}
 }
 

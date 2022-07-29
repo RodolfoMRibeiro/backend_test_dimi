@@ -1,36 +1,37 @@
 package controller
 
 import (
-	"errors"
 	"net/http"
-	"transaction/db"
 	"transaction/library"
 	model "transaction/module/models"
+
 	repository "transaction/module/repositories"
+	service "transaction/module/services"
+	"transaction/util"
 
 	"github.com/gin-gonic/gin"
 )
 
 func FindTransaction(c *gin.Context) {
-	var NewTransactions *[]model.Transaction
+	var new *repository.TranReferences
 
-	if err := db.GetGormDB().Find(&NewTransactions).Error; err != nil {
-		c.IndentedJSON(http.StatusNoContent, "could not find the transaction")
-		return
+	if !util.ContainsError(c.BindJSON(&new.Transactions)) {
+		err := new.FindTransactionsInDatabase(c)
+		service.FoundOrNotStatusReturn(err, c, new.Transactions)
 	}
-	c.JSON(http.StatusOK, NewTransactions)
 }
 
 func CreateTransaction(c *gin.Context) {
 	var NewTransaction *model.Transaction
-	if err := c.BindJSON(&NewTransaction); err != nil {
+
+	if util.ContainsError(c.BindJSON(&NewTransaction)) {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
-	NewTransaction.ValidateTransaction()
 
+	NewTransaction.ValidateTransaction()
 	if NewTransaction.IdPayer != NewTransaction.IdPayee && NewTransaction.IdStatus == library.STORE_KEEPER_STATUS && !isLojista(NewTransaction.IdPayer) {
-		if err := beginTransaction(NewTransaction); err != nil {
+		if err := repository.BeginTransaction(NewTransaction); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 			return
 		}
@@ -38,49 +39,6 @@ func CreateTransaction(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Ops! something went wrong"})
 	}
-}
-
-func beginTransaction(transac *model.Transaction) error {
-	var (
-		payerAccount = &model.Account{}
-		payeeAccount = &model.Account{}
-		tx           = db.GetGormDB().Begin()
-	)
-
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Find(payerAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Find(payeeAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	if payerAccount.Balance < transac.Value {
-		tx.Rollback()
-		return errors.New("insuficient Balance")
-	}
-	payerAccount.Balance = payerAccount.Balance - transac.Value
-	payeeAccount.Balance = payeeAccount.Balance + transac.Value
-
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Updates(payerAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	if err := tx.Table(library.TB_TRANSACTIONS).Create(transac).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	tx.Commit()
-	return nil
 }
 
 // ----------------------------------------< Aux func >---------------------------------------- \\

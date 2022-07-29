@@ -4,7 +4,6 @@ import (
 	"transaction/db"
 	"transaction/library"
 	model "transaction/module/models"
-	service "transaction/module/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,20 +15,16 @@ type UserReferences struct {
 
 func (u *UserReferences) AddUserToDatabase(c *gin.Context) (err error) {
 	err = db.GetGormDB().Create(&u.User).Error
-	service.BadStatusReturn(c, err)
 	return
 }
 
-func (u *UserReferences) FindUserInDatabase(c *gin.Context) (err error) {
+func (u *UserReferences) FindUsersInDatabase(c *gin.Context) (err error) {
 	err = db.GetGormDB().Find(&u.Users).Error
-	service.BadStatusReturn(c, err)
 	return
-
 }
 
 func (u *UserReferences) UpdateUserInDatabase(c *gin.Context) (err error) {
 	err = db.GetGormDB().Table(library.TB_USERS).Where("cpf_cnpj = ?", u.User.CpfCnpj).Updates(&u.User).Error
-	service.BadStatusReturn(c, err)
 	return
 }
 

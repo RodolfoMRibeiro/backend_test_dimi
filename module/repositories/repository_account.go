@@ -5,7 +5,6 @@ import (
 	"transaction/db"
 	"transaction/library"
 	model "transaction/module/models"
-	service "transaction/module/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,15 +16,13 @@ type AccoReferences struct {
 
 func (ac *AccoReferences) AddAccountToDatabase(c *gin.Context) (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&ac.Account).Error
-	service.BadStatusReturn(c, err)
 	return
 
 	// c.JSON(http.StatusCreated, gin.H{"New Account registred": a})
 }
 
-func (ac *AccoReferences) FindAccountInDatabase(c *gin.Context) (err error) {
+func (ac *AccoReferences) FindAccountsInDatabase(c *gin.Context) (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Find(&ac.Accounts).Error
-	service.BadStatusReturn(c, err)
 	return
 
 	// c.JSON(http.StatusFound, as)
@@ -33,7 +30,6 @@ func (ac *AccoReferences) FindAccountInDatabase(c *gin.Context) (err error) {
 
 func (ac *AccoReferences) UpdateAccountInDatabase(c *gin.Context) (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", ac.Account.Id).Updates(&ac.Account).Error
-	service.BadStatusReturn(c, err)
 	return
 
 	// c.JSON(http.StatusOK, a)
@@ -41,7 +37,6 @@ func (ac *AccoReferences) UpdateAccountInDatabase(c *gin.Context) (err error) {
 
 func (ac *AccoReferences) DeleteAccountInDatabase(c *gin.Context) (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", ac.Account.CpfCnpj).Delete(&ac.Account).Error
-	service.BadStatusReturn(c, err)
 	return
 
 	// c.JSON(http.StatusOK, gin.H{"Account deleted": a})
