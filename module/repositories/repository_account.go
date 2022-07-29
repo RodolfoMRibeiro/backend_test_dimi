@@ -11,10 +11,10 @@ import (
 
 type IAccountReferences interface {
 	GetAccountById(id int) (model.Account, error)
-	AddAccountToDatabase(c *gin.Context) error
-	FindAccountsInDatabase(c *gin.Context) error
-	UpdateAccountInDatabase(c *gin.Context) error
-	DeleteAccountInDatabase(c *gin.Context) error
+	AddAccountToDatabase() error
+	FindAccountsInDatabase() error
+	UpdateAccountInDatabase() error
+	DeleteAccountInDatabase() error
 	DeleteByCpf_Cnpj(c *gin.Context, a *model.Account) error
 }
 
@@ -24,28 +24,28 @@ type AccoReferences struct {
 	Accounts *[]model.Account
 }
 
-func (ac *AccoReferences) AddAccountToDatabase(c *gin.Context) (err error) {
+func (ac *AccoReferences) AddAccountToDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&ac.Account).Error
 	return
 
 	// c.JSON(http.StatusCreated, gin.H{"New Account registred": a})
 }
 
-func (ac *AccoReferences) FindAccountsInDatabase(c *gin.Context) (err error) {
+func (ac *AccoReferences) FindAccountsInDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Find(&ac.Accounts).Error
 	return
 
 	// c.JSON(http.StatusFound, as)
 }
 
-func (ac *AccoReferences) UpdateAccountInDatabase(c *gin.Context) (err error) {
+func (ac *AccoReferences) UpdateAccountInDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", ac.Account.Id).Updates(&ac.Account).Error
 	return
 
 	// c.JSON(http.StatusOK, a)
 }
 
-func (ac *AccoReferences) DeleteAccountInDatabase(c *gin.Context) (err error) {
+func (ac *AccoReferences) DeleteAccountInDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", ac.Account.CpfCnpj).Delete(&ac.Account).Error
 	return
 
