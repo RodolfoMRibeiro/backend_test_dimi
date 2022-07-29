@@ -6,13 +6,14 @@ import (
 	"transaction/db"
 	"transaction/library"
 	model "transaction/module/models"
-	service "transaction/module/services"
+	repository "transaction/module/repositories"
 
 	"github.com/gin-gonic/gin"
 )
 
 func FindTransaction(c *gin.Context) {
 	var NewTransactions *[]model.Transaction
+
 	if err := db.GetGormDB().Find(&NewTransactions).Error; err != nil {
 		c.IndentedJSON(http.StatusNoContent, "could not find the transaction")
 		return
@@ -36,15 +37,6 @@ func CreateTransaction(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"New user registred": NewTransaction})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Ops! something went wrong"})
-	}
-}
-
-func isLojista(AccountId int) bool {
-	user, _ := service.GetUserByAccountId(AccountId)
-	if user.IdCategory == 1 {
-		return true
-	} else {
-		return false
 	}
 }
 
@@ -89,4 +81,15 @@ func beginTransaction(transac *model.Transaction) error {
 
 	tx.Commit()
 	return nil
+}
+
+// ----------------------------------------< Aux func >---------------------------------------- \\
+
+func isLojista(AccountId int) bool {
+	user, _ := repository.GetUserByAccountId(AccountId)
+	if user.IdCategory == 1 {
+		return true
+	} else {
+		return false
+	}
 }

@@ -1,10 +1,7 @@
 package controller
 
 import (
-	"net/http"
-	"transaction/db"
-	"transaction/library"
-	model "transaction/module/models"
+	repository "transaction/module/repositories"
 	service "transaction/module/services"
 	"transaction/util"
 
@@ -12,54 +9,44 @@ import (
 )
 
 func CreateAccount(c *gin.Context) {
-	var NewAccount *model.Account
-	if !util.ContainsError(c.BindJSON(&NewAccount)) {
-		service.AddAccountToDatabase(c, NewAccount)
+	var new *repository.AccoReferences
+
+	if !util.ContainsError(c.BindJSON(&new.Account)) {
+		err := new.AddAccountToDatabase(c)
+		service.RegistredAccountStatus(err, c, new.Account)
 	}
-	c.JSON(http.StatusOK, gin.H{"New transaction registred": NewAccount})
+
 }
 
 func FindAccount(c *gin.Context) {
-	var NewAccounts *[]model.Account
-	service.FindAccountInDatabase(c, NewAccounts)
+	var registred *repository.AccoReferences
+	err := registred.FindAccountInDatabase(c)
+	service.FoundOrNotStatusReturn(err, c, registred.Accounts)
 }
 
 func UpdateAccount(c *gin.Context) {
-	var NewAccount *model.Account
-	if !util.ContainsError(c.BindJSON(&NewAccount)) {
-		service.UpdateAccountInDatabase(c, NewAccount)
+	var registred *repository.AccoReferences
+
+	if !util.ContainsError(c.BindJSON(&registred.Account)) {
+		err := registred.UpdateAccountInDatabase(c)
+		service.FoundOrNotStatusReturn(err, c, registred.Account)
 	}
 }
 
 func DeleteAccount(c *gin.Context) {
-	var NewAccount *model.Account
-	if !util.ContainsError(c.BindJSON(&NewAccount)) {
-		service.DeleteAccountInDatabase(c, NewAccount)
+	var registred *repository.AccoReferences
+
+	if !util.ContainsError(c.BindJSON(&registred.Account)) {
+		err := registred.DeleteAccountInDatabase(c)
+		service.FoundOrNotStatusReturn(err, c, registred.Account)
 	}
 }
 
 func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
-	var NewAccount *model.Account
-	NewAccount.CpfCnpj = cpf_cnpj
-	if checkCPForCPNJ(NewAccount) && !util.ContainsError(c.BindJSON(&NewAccount)) {
-		service.DeleteByCpf_Cnpj(c, NewAccount)
-	}
-}
+	var registred *repository.AccoReferences
 
-// -------------------------------------------< Aux funcs >------------------------------------------- \\
-
-func checkCPForCPNJ(a *model.Account) (boolean bool) {
-	if cpfORcnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(a.CpfCnpj))); ok {
-		boolean = true
-		a.CpfCnpj = cpfORcnpj
+	registred.Account.CpfCnpj = cpf_cnpj
+	if service.CheckCPForCPNJ(registred.Account) && !util.ContainsError(c.BindJSON(&registred.Account)) {
+		repository.DeleteByCpf_Cnpj(c, registred.Account)
 	}
-	return
-}
-
-func GetAccountsFromUser(cpf_cnpj string) []model.Account {
-	var NewAccounts []model.Account = []model.Account{}
-	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", cpf_cnpj).Find(&NewAccounts).Error; err != nil {
-		return nil
-	}
-	return NewAccounts
 }

@@ -2,9 +2,8 @@ package controller
 
 import (
 	"net/http"
-	"transaction/db"
 
-	model "transaction/module/models"
+	repository "transaction/module/repositories"
 	service "transaction/module/services"
 	"transaction/util"
 
@@ -12,43 +11,37 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-	var newUser *model.User
-	if util.ContainsError(c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
-		service.AddUserToDatabase(c, newUser)
+	var new *repository.UserReferences
+
+	if util.ContainsError(c.BindJSON(&new.User)) && service.CheckEmailAndCpf_Cnpf(new.User) {
+		err := new.AddUserToDatabase(c)
+		service.FoundOrNotStatusReturn(err, c, new.User)
 	}
 }
 
 func FindUser(c *gin.Context) {
-	var newUsers []model.User
-	if err := db.GetGormDB().Find(&newUsers).Error; err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, err)
-		return
-	}
+	var registred repository.UserReferences
 
-	for i := 0; i < len(newUsers); i++ {
-		newUsers[i].Account = GetAccountsFromUser(newUsers[i].CpfCnpj)
+	if err := registred.FindUserInDatabase(c); err != nil {
+		return
+	} else {
+
+		for _, userRegistred := range *registred.Users {
+			userRegistred.Account = repository.GetAccountsFromUser(userRegistred.CpfCnpj)
+		}
+		service.FoundOrNotStatusReturn(err, c, registred.Users)
 	}
-	c.JSON(http.StatusFound, newUsers)
 }
 
 func UploadUser(c *gin.Context) {
-	var newUser *model.User
-	if util.ContainsError(c.BindJSON(&newUser)) && checkEmailAndCpf_Cnpf(newUser) {
-		service.UpdateUserInDatabase(c, newUser)
+	var registred *repository.UserReferences
+
+	if util.ContainsError(c.BindJSON(&registred.User)) && service.CheckEmailAndCpf_Cnpf(registred.User) {
+		registred.UpdateUserInDatabase(c)
 	}
 }
 
 func DeleteUser(c *gin.Context) {
+	// No way to remove all database dependencies and interfer in other transactions
 	c.IndentedJSON(http.StatusNotFound, "Sorry, but this method hasn't been developed yet")
-}
-
-// -------------------------------------------< Aux funcs >------------------------------------------- \\
-
-func checkEmailAndCpf_Cnpf(u *model.User) (boolean bool) {
-	cpf_cnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(u.CpfCnpj)))
-	if ok && util.IsEmailValid(util.TrimAllSpacesInString(u.Email)) {
-		boolean = true
-		u.CpfCnpj = cpf_cnpj
-	}
-	return
 }

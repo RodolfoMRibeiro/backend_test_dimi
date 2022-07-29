@@ -2,48 +2,51 @@ package service
 
 import (
 	"net/http"
-	"transaction/db"
-	"transaction/library"
-
 	model "transaction/module/models"
+	"transaction/util"
 
 	"github.com/gin-gonic/gin"
 )
 
-func AddUserToDatabase(c *gin.Context, u *model.User) {
-	if err := db.GetGormDB().Create(&u).Error; err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, err)
-		return
+func CheckEmailAndCpf_Cnpf(u *model.User) (boolean bool) {
+	cpf_cnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(u.CpfCnpj)))
+	if ok && util.IsEmailValid(util.TrimAllSpacesInString(u.Email)) {
+		boolean = true
+		u.CpfCnpj = cpf_cnpj
 	}
-	c.JSON(http.StatusCreated, u)
+	return
 }
 
-func FindUserInDatabase(c *gin.Context, us *[]model.User) {
-	if err := db.GetGormDB().Find(&us).Error; err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, err)
-		return
+func CheckCPForCPNJ(a *model.Account) (boolean bool) {
+	if cpfORcnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(a.CpfCnpj))); ok {
+		boolean = true
+		a.CpfCnpj = cpfORcnpj
 	}
-	c.JSON(http.StatusFound, us)
+	return
 }
 
-func UpdateUserInDatabase(c *gin.Context, u *model.User) {
-	if err := db.GetGormDB().Table(library.TB_USERS).Where("cpf_cnpj = ?", u.CpfCnpj).Updates(&u).Error; err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, err)
-		return
-	}
-	c.JSON(http.StatusOK, u)
-}
+//
 
-func GetUserByAccountId(id int) (model.User, error) {
-	var newUser = &model.User{}
-	account, err := GetAccountById(id)
-
+func BadStatusReturn(c *gin.Context, err error) {
 	if err != nil {
-		return *newUser, err
+		c.IndentedJSON(http.StatusInternalServerError, err)
 	}
+}
 
-	if err := db.GetGormDB().Table(library.TB_USERS).Where("cpf_cnpj = ?", account.CpfCnpj).First(newUser).Error; err != nil {
-		return *newUser, err
+func FoundOrNotStatusReturn(err error, c *gin.Context, obj interface{}) {
+	if err != nil {
+		BadStatusReturn(c, err)
+	} else {
+		c.JSON(http.StatusFound, obj)
 	}
-	return *newUser, nil
+}
+
+//
+
+func RegistredAccountStatus(err error, c *gin.Context, obj interface{}) {
+	if err != nil {
+		BadStatusReturn(c, err)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"New transaction registred": obj})
+	}
 }
