@@ -15,7 +15,6 @@ func CreateUser(c *gin.Context) {
 	var new repository.UserReferences
 
 	if !util.ContainsError(c.BindJSON(&new.User)) && service.CheckEmailAndCpf_Cnpf(new.User) {
-		fmt.Println("Olá mundo! ", new)
 		err := new.AddUserToDatabase()
 		service.FoundOrNotStatusReturn(err, c, new.User)
 	}
