@@ -117,9 +117,13 @@ $ docker-compose up -d
 │    |    ├── model_status.go
 │    │    └── model_user.go
 │    │
+|    ├── repositories
+│    |    ├── repository_transaction.go
+│    |    ├── repository_account.go
+│    │    └── repository_user.go
+│    │ 
 │    ├── services
-│    │    ├── service_account.go
-│    │    └── service_user.go
+│    │    └── service.go
 │    │
 │    └── routers
 │         ├── routes_transaction.go
@@ -127,7 +131,6 @@ $ docker-compose up -d
 │         └── routes_user.go
 |
 ├── server
-│    ├── serverStruct.go
 │    └── server.go
 |
 ├── routers 
