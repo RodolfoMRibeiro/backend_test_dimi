@@ -1,16 +1,18 @@
 package routes
 
 import (
+	"transaction/module/routes"
+
 	"github.com/gin-gonic/gin"
 )
 
 func Avaiable(r *gin.Engine) {
 	user := r.Group("/user")
-	UserRoutes(user)
+	routes.UserRoutes(user)
 
 	account := r.Group("/account")
-	AccountRoutes(account)
+	routes.AccountRoutes(account)
 
 	transaction := account.Group("/transaction")
-	TransactionRoutes(transaction)
+	routes.TransactionRoutes(transaction)
 }
