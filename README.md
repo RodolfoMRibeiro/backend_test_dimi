@@ -45,7 +45,7 @@ A little more about this sample bank internal process... It contains a route to 
 ## Database Modeling
 <table><tr><td valign="top" width="50%">
 
-- 🔭 Relational datebase
+- 🔭 Relational database
   
 
 - 🌱 Coverage: 1º, 2º, 3º Normal forms
@@ -85,58 +85,57 @@ $ docker-compose up -d
 
 ```bash
 .
+├── configs
+│    ├── configFuncs.go
+│    └── configs.go
+│  
 ├── db
-│    ├── Data
-│    |    └── predifinedData.go
-│    |
-│    ├── entity
-│    |    ├── environmentVariables_test.go
-│    |    └── environmentVariables.go
-│    |
-│    └── database.go
+│    ├── seed
+│    |    └── seed.go
+|    |
+│    ├── database.go
+│    └── runner.go
+|
+├── integrations 
+|    ├── integrations_test.go
+│    └── integrations.go
+|
+├── library
+│    └── consts.go
 |
 ├── module
-│    ├── account
-│    |    ├── controller
-│    |    |    └── account.go
-│    |    |
-│    |    ├── entity
-│    |    |    └── account.go
-│    |    |
-│    │    └── routes.go
+│    ├── controllers
+│    |    ├── controller_transaction.go
+│    |    ├── controller_account.go
+│    │    └── controller_user.go
 │    │
-│    ├── category
-│    │    └── entity
-│    │         └── category.go
+│    ├── models
+│    |    ├── model_transaction.go
+│    |    ├── model_interfaces.go
+│    |    ├── model_category.go
+│    |    ├── model_account.go
+│    |    ├── model_status.go
+│    │    └── model_user.go
 │    │
-│    ├── status
-│    │    └── entity
-│    │         └── status.go
+│    ├── services
+│    │    ├── service_account.go
+│    │    └── service_user.go
 │    │
-│    ├── transaction
-│    │    ├── controller
-│    |    |    └── transaction.go
-│    |    |
-│    │    ├── entity
-│    |    |    └── transaction.go
-│    |    |
-│    │    └── routers.go
-│    │
-│    └── user
-│         ├── controller
-│         |    └── user.go
-│         |
-│         ├── entity
-│         |    └── user.go
-│         |
-│         └── routers.go
+│    └── routers
+│         ├── routes_transaction.go
+│         ├── routes_account.go
+│         └── routes_user.go
 |
-├── Routes 
+├── server
+│    ├── serverStruct.go
+│    └── server.go
+|
+├── routers 
 │    └── routes.go
 |
 ├── util
-│    ├── utilities.go
-│    └── utilities_test.go
+│    ├── utilities_test.go
+│    └── utilities.go
 |
 ├── .env-example
 ├── .gitignore
