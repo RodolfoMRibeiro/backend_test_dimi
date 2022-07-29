@@ -6,7 +6,6 @@ import (
 	model "transaction/module/models"
 
 	repository "transaction/module/repositories"
-	service "transaction/module/services"
 	"transaction/util"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +16,7 @@ func FindTransaction(c *gin.Context) {
 
 	if !util.ContainsError(c.BindJSON(&new.Transactions)) {
 		err := new.FindTransactionsInDatabase(c)
-		service.FoundOrNotStatusReturn(err, c, new.Transactions)
+		util.FoundOrNotStatusReturn(err, c, new.Transactions)
 	}
 }
 

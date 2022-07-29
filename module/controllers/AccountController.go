@@ -13,7 +13,7 @@ func CreateAccount(c *gin.Context) {
 
 	if !util.ContainsError(c.BindJSON(&new.Account)) {
 		err := new.AddAccountToDatabase()
-		service.CreateOrNotStatusReturn(err, c, new.Account)
+		util.CreateOrNotStatusReturn(err, c, new.Account)
 	}
 
 }
@@ -22,7 +22,7 @@ func FindAccount(c *gin.Context) {
 	var registred *repository.AccoReferences
 
 	err := registred.FindAccountsInDatabase()
-	service.FoundOrNotStatusReturn(err, c, registred.Accounts)
+	util.FoundOrNotStatusReturn(err, c, registred.Accounts)
 }
 
 func UpdateAccount(c *gin.Context) {
@@ -30,7 +30,7 @@ func UpdateAccount(c *gin.Context) {
 
 	if !util.ContainsError(c.BindJSON(&registred.Account)) {
 		err := registred.UpdateAccountInDatabase()
-		service.ModifiedOrNotStatusReturn(err, c, registred.Account)
+		util.ModifiedOrNotStatusReturn(err, c, registred.Account)
 	}
 }
 
@@ -39,7 +39,7 @@ func DeleteAccount(c *gin.Context) {
 
 	if !util.ContainsError(c.BindJSON(&registred.Account)) {
 		err := registred.DeleteAccountInDatabase()
-		service.DeleteOrNotStatusReturn(err, c, registred.Account)
+		util.DeleteOrNotStatusReturn(err, c, registred.Account)
 	}
 }
 

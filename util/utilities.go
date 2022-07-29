@@ -3,11 +3,9 @@ package util
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"regexp"
 	"strings"
 
-	"github.com/gin-gonic/gin"
 	"github.com/paemuri/brdoc"
 )
 
@@ -46,13 +44,6 @@ func VerifyingCPForCNPJ(str string) (string, bool) {
 func PresentateErros(err error) {
 	if err != nil {
 		fmt.Println("Error: ", err)
-	}
-}
-
-func BadRequest(c *gin.Context, err error) {
-	if err == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ""})
-		return
 	}
 }
 

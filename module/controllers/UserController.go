@@ -17,7 +17,7 @@ func CreateUser(c *gin.Context) {
 	if !util.ContainsError(c.BindJSON(&new.User)) && service.CheckEmailAndCpf_Cnpf(new.User) {
 		fmt.Println("Olá mundo! ", new)
 		err := new.AddUserToDatabase()
-		service.FoundOrNotStatusReturn(err, c, new.User)
+		util.FoundOrNotStatusReturn(err, c, new.User)
 	}
 }
 
@@ -28,7 +28,7 @@ func FindUser(c *gin.Context) {
 	err2 := registred.GetAccountsFromUser()
 
 	fmt.Println(err1, err2)
-	service.FoundOrNotStatusReturn(err2, c, registred.Users)
+	util.FoundOrNotStatusReturn(err2, c, registred.Users)
 
 }
 
@@ -37,7 +37,7 @@ func UploadUser(c *gin.Context) {
 
 	if !util.ContainsError(c.BindJSON(&registred.User)) && service.CheckEmailAndCpf_Cnpf(registred.User) {
 		err := registred.UpdateUserInDatabase()
-		service.ModifiedOrNotStatusReturn(err, c, registred.User)
+		util.ModifiedOrNotStatusReturn(err, c, registred.User)
 	}
 }
 
