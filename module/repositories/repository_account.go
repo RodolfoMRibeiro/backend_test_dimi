@@ -24,7 +24,7 @@ type AccoReferences struct {
 	Accounts *[]model.Account
 }
 
-func (ac *AccoReferences) AddAccountToDatabase() (err error) {
+func (ac AccoReferences) AddAccountToDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&ac.Account).Error
 	return
 
@@ -38,7 +38,7 @@ func (ac *AccoReferences) FindAccountsInDatabase() (err error) {
 	// c.JSON(http.StatusFound, as)
 }
 
-func (ac *AccoReferences) UpdateAccountInDatabase() (err error) {
+func (ac AccoReferences) UpdateAccountInDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", ac.Account.Id).Updates(&ac.Account).Error
 	return
 

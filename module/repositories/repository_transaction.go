@@ -18,8 +18,8 @@ type TranReferences struct {
 	Transactions *[]model.Transaction
 }
 
-func (tr *TranReferences) FindTransactionsInDatabase(c *gin.Context) (err error) {
-	err = db.GetGormDB().Find(&tr.Transactions).Error
+func (tr *TranReferences) FindTransactionsInDatabase() (err error) {
+	err = db.GetGormDB().Table(library.TB_TRANSACTIONS).Find(&tr.Transactions).Error
 	return
 }
 

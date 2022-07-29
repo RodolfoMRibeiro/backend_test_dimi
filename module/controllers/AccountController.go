@@ -9,24 +9,23 @@ import (
 )
 
 func CreateAccount(c *gin.Context) {
-	var new *repository.AccoReferences
+	var new repository.AccoReferences
 
 	if !util.ContainsError(c.BindJSON(&new.Account)) {
 		err := new.AddAccountToDatabase()
 		service.CreateOrNotStatusReturn(err, c, new.Account)
 	}
-
 }
 
 func FindAccount(c *gin.Context) {
-	var registred *repository.AccoReferences
+	var registred repository.AccoReferences
 
 	err := registred.FindAccountsInDatabase()
 	service.FoundOrNotStatusReturn(err, c, registred.Accounts)
 }
 
 func UpdateAccount(c *gin.Context) {
-	var registred *repository.AccoReferences
+	var registred repository.AccoReferences
 
 	if !util.ContainsError(c.BindJSON(&registred.Account)) {
 		err := registred.UpdateAccountInDatabase()
@@ -35,7 +34,7 @@ func UpdateAccount(c *gin.Context) {
 }
 
 func DeleteAccount(c *gin.Context) {
-	var registred *repository.AccoReferences
+	var registred repository.AccoReferences
 
 	if !util.ContainsError(c.BindJSON(&registred.Account)) {
 		err := registred.DeleteAccountInDatabase()

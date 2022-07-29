@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"transaction/library"
-	model "transaction/module/models"
 
 	repository "transaction/module/repositories"
 	service "transaction/module/services"
@@ -13,29 +13,29 @@ import (
 )
 
 func FindTransaction(c *gin.Context) {
-	var new *repository.TranReferences
+	var new repository.TranReferences
 
-	if !util.ContainsError(c.BindJSON(&new.Transactions)) {
-		err := new.FindTransactionsInDatabase(c)
-		service.FoundOrNotStatusReturn(err, c, new.Transactions)
-	}
+	err := new.FindTransactionsInDatabase()
+	service.FoundOrNotStatusReturn(err, c, new.Transactions)
 }
 
 func CreateTransaction(c *gin.Context) {
-	var NewTransaction *model.Transaction
+	var new repository.TranReferences
 
-	if util.ContainsError(c.BindJSON(&NewTransaction)) {
+	fmt.Println("ENTROU")
+	if util.ContainsError(c.BindJSON(&new.Transaction)) {
+		fmt.Println("PASSOU")
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
 
-	NewTransaction.ValidateTransaction()
-	if NewTransaction.IdPayer != NewTransaction.IdPayee && NewTransaction.IdStatus == library.STORE_KEEPER_STATUS && !isLojista(NewTransaction.IdPayer) {
-		if err := repository.BeginTransaction(NewTransaction); err != nil {
+	new.Transaction.ValidateTransaction()
+	if new.Transaction.IdPayer != new.Transaction.IdPayee && new.Transaction.IdStatus == library.STORE_KEEPER_STATUS && !isLojista(new.Transaction.IdPayer) {
+		if err := repository.BeginTransaction(new.Transaction); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"New user registred": NewTransaction})
+		c.JSON(http.StatusOK, gin.H{"New user registred": new.Transaction})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Ops! something went wrong"})
 	}
