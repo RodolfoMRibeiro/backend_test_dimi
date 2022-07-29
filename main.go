@@ -5,7 +5,8 @@ import (
 	config "transaction/configs"
 	"transaction/db"
 	seed "transaction/db/Seed"
-	"transaction/module/routes"
+
+	routers "transaction/routers"
 	"transaction/server"
 )
 
@@ -14,6 +15,6 @@ func main() {
 	db.StartDatabase()
 	seed.Handler(db.GetGormDB())
 	createdServer := server.CreateServer()
-	routes.Avaiable(createdServer.GetServerEngine())
+	routers.Avaiable(createdServer.GetServerEngine())
 	createdServer.GetServerEngine().Run(fmt.Sprintf("%s:%s", config.Server.HOST, config.Server.PORT))
 }
