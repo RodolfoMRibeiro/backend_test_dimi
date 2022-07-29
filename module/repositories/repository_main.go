@@ -1,22 +1,22 @@
 package repository
 
-import (
-	"transaction/db"
+// import (
+// 	"transaction/db"
 
-	"gorm.io/gorm"
-)
+// 	"gorm.io/gorm"
+// )
 
-type DbReferences struct {
-	DB             *gorm.DB
-	RepoReferences interface{}
-}
+// type DbReferences struct {
+// 	DB             *gorm.DB
+// 	RepoReferences interface{}
+// }
 
-type RepoReferences interface {
-	UserReferences
-	AccoReferences
-	TranReferences
-}
+// type RepoReferences interface {
+// 	UserReferences
+// 	AccoReferences
+// 	TranReferences
+// }
 
-func (Db *DbReferences) GetDataBase() {
-	Db.DB = db.GetGormDB()
-}
+// func (Db *DbReferences) GetDataBase() {
+// 	Db.DB = db.GetGormDB()
+// }
