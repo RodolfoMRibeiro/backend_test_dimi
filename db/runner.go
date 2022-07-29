@@ -3,13 +3,8 @@ package db
 import (
 	"fmt"
 	"log"
-	entity_account "transaction/module/account/entity"
-	entity_category "transaction/module/category/entity"
-	entity_status "transaction/module/status/entity"
-	entity_transaction "transaction/module/transaction/entity"
-	entity_user "transaction/module/user/entity"
-
 	config "transaction/configs"
+	model "transaction/module/models"
 
 	"gorm.io/gorm"
 )
@@ -49,9 +44,9 @@ func createDatabaseStringConfig() string {
 }
 
 func loadMigrations(db *gorm.DB) {
-	db.AutoMigrate(&entity_account.Account{})
-	db.AutoMigrate(&entity_category.Category{})
-	db.AutoMigrate(&entity_status.Status{})
-	db.AutoMigrate(&entity_transaction.Transaction{})
-	db.AutoMigrate(&entity_user.User{})
+	db.AutoMigrate(&model.Account{})
+	db.AutoMigrate(&model.Category{})
+	db.AutoMigrate(&model.Status{})
+	db.AutoMigrate(&model.Transaction{})
+	db.AutoMigrate(&model.User{})
 }

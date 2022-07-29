@@ -2,10 +2,7 @@ package seed
 
 import (
 	"transaction/library"
-	entity_category "transaction/module/category/entity"
-	entity_status "transaction/module/status/entity"
-	entity_transaction "transaction/module/transaction/entity"
-	entity_user "transaction/module/user/entity"
+	model "transaction/module/models"
 
 	"gorm.io/gorm"
 )
@@ -17,9 +14,9 @@ func Handler(db *gorm.DB) {
 }
 
 func populateCategoryData(db *gorm.DB) {
-	categories := []entity_category.Category{
-		{Id: 1, Name: "Lojista", Users: []entity_user.User{}},
-		{Id: 2, Name: "Comum", Users: []entity_user.User{}},
+	categories := []model.Category{
+		{Id: 1, Name: "Lojista", Users: []model.User{}},
+		{Id: 2, Name: "Comum", Users: []model.User{}},
 	}
 
 	for _, category := range categories {
@@ -30,9 +27,9 @@ func populateCategoryData(db *gorm.DB) {
 }
 
 func populateStatusData(db *gorm.DB) {
-	statusArr := []entity_status.Status{
-		{Id: 1, Name: "Autorizado", Transaction: []entity_transaction.Transaction{}},
-		{Id: 2, Name: "Não Autorizado", Transaction: []entity_transaction.Transaction{}},
+	statusArr := []model.Status{
+		{Id: 1, Name: "Autorizado", Transaction: []model.Transaction{}},
+		{Id: 2, Name: "Não Autorizado", Transaction: []model.Transaction{}},
 	}
 
 	for _, status := range statusArr {

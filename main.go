@@ -5,7 +5,7 @@ import (
 	config "transaction/configs"
 	"transaction/db"
 	seed "transaction/db/Seed"
-	"transaction/routes"
+	"transaction/module/routes"
 	"transaction/server"
 )
 

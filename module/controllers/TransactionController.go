@@ -5,15 +5,14 @@ import (
 	"net/http"
 	"transaction/db"
 	"transaction/library"
-	"transaction/module/account/entity"
-	entity_transaction "transaction/module/transaction/entity"
-	"transaction/module/user/service"
+	model "transaction/module/models"
+	service "transaction/module/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 func FindTransaction(c *gin.Context) {
-	var NewTransactions *[]entity_transaction.Transaction
+	var NewTransactions *[]model.Transaction
 	if err := db.GetGormDB().Find(&NewTransactions).Error; err != nil {
 		c.IndentedJSON(http.StatusNoContent, "could not find the transaction")
 		return
@@ -22,7 +21,7 @@ func FindTransaction(c *gin.Context) {
 }
 
 func CreateTransaction(c *gin.Context) {
-	var NewTransaction *entity_transaction.Transaction
+	var NewTransaction *model.Transaction
 	if err := c.BindJSON(&NewTransaction); err != nil {
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
@@ -49,10 +48,10 @@ func isLojista(AccountId int) bool {
 	}
 }
 
-func beginTransaction(transac *entity_transaction.Transaction) error {
+func beginTransaction(transac *model.Transaction) error {
 	var (
-		payerAccount = &entity.Account{}
-		payeeAccount = &entity.Account{}
+		payerAccount = &model.Account{}
+		payeeAccount = &model.Account{}
 		tx           = db.GetGormDB().Begin()
 	)
 
