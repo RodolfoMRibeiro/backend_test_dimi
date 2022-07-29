@@ -6,15 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type DbReferences struct {
-	DB             *gorm.DB
-	RepoReferences interface{}
-}
-
 type RepoReferences interface {
 	UserReferences
 	AccoReferences
 	TranReferences
+}
+
+type DbReferences struct {
+	DB             *gorm.DB
+	RepoReferences interface{}
 }
 
 func (Db *DbReferences) GetDataBase() {

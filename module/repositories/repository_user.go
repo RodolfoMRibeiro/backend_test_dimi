@@ -8,6 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type IUserReferences interface {
+	AddUserToDatabase(c *gin.Context) error
+	FindUsersInDatabase(c *gin.Context) error
+	UpdateUserInDatabase(c *gin.Context) error
+	GetUserByAccountId(c *gin.Context) error
+	GetAccountsFromUser(c *gin.Context) error
+}
+
 type UserReferences struct {
 	User  *model.User
 	Users *[]model.User

@@ -9,6 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type ITranReferences interface {
+	FindTransactionsInDatabase(c *gin.Context) error
+}
 type TranReferences struct {
 	Transaction  *model.Transaction
 	Transactions *[]model.Transaction
