@@ -19,6 +19,7 @@ type IAccountReferences interface {
 }
 
 type AccoReferences struct {
+	IAccountReferences
 	Account  *model.Account
 	Accounts *[]model.Account
 }

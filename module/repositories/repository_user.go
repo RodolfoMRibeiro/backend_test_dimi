@@ -17,6 +17,7 @@ type IUserReferences interface {
 }
 
 type UserReferences struct {
+	IUserReferences
 	User  *model.User
 	Users *[]model.User
 }
