@@ -9,7 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type IAccountReferences interface {
+	GetAccountById(id int) (model.Account, error)
+	AddAccountToDatabase(c *gin.Context) error
+	FindAccountsInDatabase(c *gin.Context) error
+	UpdateAccountInDatabase(c *gin.Context) error
+	DeleteAccountInDatabase(c *gin.Context) error
+	DeleteByCpf_Cnpj(c *gin.Context, a *model.Account) error
+}
+
 type AccoReferences struct {
+	IAccountReferences
 	Account  *model.Account
 	Accounts *[]model.Account
 }

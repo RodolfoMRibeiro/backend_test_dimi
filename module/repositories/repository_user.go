@@ -7,7 +7,16 @@ import (
 	model "transaction/module/models"
 )
 
+type IUserReferences interface {
+	AddUserToDatabase(c *gin.Context) error
+	FindUsersInDatabase(c *gin.Context) error
+	UpdateUserInDatabase(c *gin.Context) error
+	GetUserByAccountId(c *gin.Context) error
+	GetAccountsFromUser(c *gin.Context) error
+}
+
 type UserReferences struct {
+	IUserReferences
 	User  *model.User
 	Users *[]model.User
 }
