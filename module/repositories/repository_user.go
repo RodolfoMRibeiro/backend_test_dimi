@@ -4,6 +4,7 @@ import (
 	"transaction/db"
 	"transaction/library"
 	model "transaction/module/models"
+	"transaction/util"
 )
 
 type IUserReferences interface {
@@ -35,6 +36,12 @@ func (u UserReferences) UpdateUserInDatabase() (err error) {
 	return
 }
 
+func (u UserReferences) DeleteUserInDatabase() (err error) {
+	// err = db.GetGormDB().Unscoped().Where("cpf_cnpj = ?", u.User.CpfCnpj).Delete(&u.User).Error
+	err = DeletingProcess(u.User)
+	return
+}
+
 func (u *UserReferences) GetAccountsFromUser() (err error) {
 	for index, user := range *u.Users {
 		err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", user.CpfCnpj).Find(&user.Account).Error
@@ -57,4 +64,27 @@ func GetUserByAccountId(id int) (model.User, error) {
 		return *newUser, err
 	}
 	return *newUser, nil
+}
+
+func DeletingProcess(user *model.User) error {
+	var (
+		// user        = &model.User{}
+		account     = &[]model.Account{}
+		transaction = &[]model.Transaction{}
+		tx          = db.GetGormDB().Begin()
+	)
+	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", user.CpfCnpj).Find(account).Error)
+
+	util.ValidateTransacion(tx, tx.Table(library.TB_TRANSACTIONS).Find(transaction).Error)
+	// --------------------------------< Start deleting >-------------------------------- \\
+	for index, transac := range *transaction {
+		util.ValidateTransacion(tx, tx.Table(library.TB_TRANSACTIONS).Where("id_payer = ? ", (*account)[index]).Delete(transac).Error)
+	}
+
+	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", user.CpfCnpj).Delete(account).Error)
+
+	util.ValidateTransacion(tx, tx.Table(library.TB_USERS).Where("cpf_cnpj = ?", user.CpfCnpj).Delete(user).Error)
+
+	tx.Commit()
+	return nil
 }

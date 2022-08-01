@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"net/http"
 
 	repository "transaction/module/repositories"
 	service "transaction/module/services"
@@ -41,5 +40,10 @@ func UploadUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	c.IndentedJSON(http.StatusNotFound, "Sorry, but this method hasn't been developed yet")
+	var registred repository.UserReferences
+	if !util.ContainsError(c.BindJSON(&registred.User)) {
+		err := registred.DeleteUserInDatabase()
+		service.DeleteOrNotStatusReturn(err, c, registred.User)
+	}
+
 }
