@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"transaction/db"
 	"transaction/library"
 	model "transaction/module/models"
@@ -37,12 +36,11 @@ func (u UserReferences) UpdateUserInDatabase() (err error) {
 }
 
 func (u *UserReferences) GetAccountsFromUser() (err error) {
-	for _, user := range *u.Users {
+	for index, user := range *u.Users {
 		err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", user.CpfCnpj).Find(&user.Account).Error
-		*u.Users = append(*u.Users, *u.Users...)
-		fmt.Println(u.User)
+		(*u.Users)[index].Account = user.Account
 	}
-	return
+	return err
 }
 
 // ----------------------------------------< Special case >---------------------------------------- \\

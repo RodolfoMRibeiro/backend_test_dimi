@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"transaction/library"
 
@@ -22,9 +21,7 @@ func FindTransaction(c *gin.Context) {
 func CreateTransaction(c *gin.Context) {
 	var new repository.TranReferences
 
-	fmt.Println("ENTROU")
 	if util.ContainsError(c.BindJSON(&new.Transaction)) {
-		fmt.Println("PASSOU")
 		c.IndentedJSON(http.StatusNotAcceptable, "wrong data inserted") // 406
 		return
 	}
