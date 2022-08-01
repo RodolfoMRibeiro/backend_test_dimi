@@ -41,6 +41,5 @@ func UploadUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	// No way to remove all database dependencies and interfer in other transactions
 	c.IndentedJSON(http.StatusNotFound, "Sorry, but this method hasn't been developed yet")
 }

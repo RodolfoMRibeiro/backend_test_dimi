@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/paemuri/brdoc"
+	"gorm.io/gorm"
 )
 
 func ParseMapToJson(mp map[string]string) string {
@@ -62,4 +63,12 @@ func ContainsError(err error) bool {
 	} else {
 		return false
 	}
+}
+
+func ValidateTransacion(tx *gorm.DB, err error) error {
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
 }

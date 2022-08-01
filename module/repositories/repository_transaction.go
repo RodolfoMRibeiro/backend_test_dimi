@@ -5,6 +5,7 @@ import (
 	"transaction/db"
 	"transaction/library"
 	model "transaction/module/models"
+	"transaction/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,38 +31,25 @@ func BeginTransaction(transac *model.Transaction) error {
 		tx           = db.GetGormDB().Begin()
 	)
 
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Find(payerAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Find(payerAccount).Error)
 
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Find(payeeAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Find(payeeAccount).Error)
 
 	if payerAccount.Balance < transac.Value {
 		tx.Rollback()
 		return errors.New("insuficient Balance")
 	}
+
 	payerAccount.Balance = payerAccount.Balance - transac.Value
 	payeeAccount.Balance = payeeAccount.Balance + transac.Value
 
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Updates(payerAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Updates(payerAccount).Error)
 
-	if err := tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error)
 
-	if err := tx.Table(library.TB_TRANSACTIONS).Create(transac).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	util.ValidateTransacion(tx, tx.Table(library.TB_TRANSACTIONS).Create(transac).Error)
 
 	tx.Commit()
+
 	return nil
 }
