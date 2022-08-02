@@ -9,7 +9,9 @@ import (
 )
 
 func CheckEmailAndCpf_Cnpf(u *model.User) (boolean bool) {
-	cpf_cnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(u.CpfCnpj)))
+	onlyNumbers := util.LetOnlyNumbers(util.TrimAllSpacesInString(u.CpfCnpj))
+	cpf_cnpj, ok := util.VerifyingCPForCNPJ(onlyNumbers)
+
 	if ok && util.IsEmailValid(util.TrimAllSpacesInString(u.Email)) {
 		boolean = true
 		u.CpfCnpj = cpf_cnpj
