@@ -3,6 +3,7 @@ package config
 var (
 	Mysql  MysqlConfig
 	Server ServerConfig
+	API    ExternalAPI
 )
 
 type MysqlConfig struct {
@@ -19,7 +20,12 @@ type ServerConfig struct {
 	HOST string `env:"SERVER_HOST"`
 }
 
+type ExternalAPI struct {
+	URL string `env:"EXTERNAL_API"`
+}
+
 func Load() {
 	loadStructWithEnvVars(&Mysql)
 	loadStructWithEnvVars(&Server)
+	loadStructWithEnvVars(&API)
 }

@@ -27,7 +27,7 @@ func CreateTransaction(c *gin.Context) {
 	}
 
 	new.Transaction.ValidateTransaction()
-	if new.Transaction.IdPayer != new.Transaction.IdPayee && new.Transaction.IdStatus == library.STORE_KEEPER_STATUS && !isLojista(new.Transaction.IdPayer) {
+	if new.Transaction.IdPayer != new.Transaction.IdPayee && new.Transaction.IdStatus == library.STORE_KEEPER_STATUS && !isStoreKeeper(new.Transaction.IdPayer) {
 		if err := repository.BeginTransaction(new.Transaction); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 			return
@@ -40,7 +40,7 @@ func CreateTransaction(c *gin.Context) {
 
 // ----------------------------------------< Aux func >---------------------------------------- \\
 
-func isLojista(AccountId int) bool {
+func isStoreKeeper(AccountId int) bool {
 	user, _ := repository.GetUserByAccountId(AccountId)
 	if user.IdCategory == 1 {
 		return true
