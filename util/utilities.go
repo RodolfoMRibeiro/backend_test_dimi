@@ -57,11 +57,7 @@ func BadRequest(c *gin.Context, err error) {
 }
 
 func ContainsError(err error) bool {
-	if err != nil {
-		return true
-	} else {
-		return false
-	}
+	return err != nil
 }
 
 func ValidateTransacion(tx *gorm.DB, err error) error {
