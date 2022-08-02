@@ -14,10 +14,10 @@ type TransactionStatus struct {
 
 func (b *TransactionStatus) ConnectWithExternalAPI() {
 	response, err := http.Get(config.API.URL)
-	util.PresentateErros(err)
+	util.ShowErrors(err)
 
 	responseData, err := ioutil.ReadAll(response.Body)
-	util.PresentateErros(err)
+	util.ShowErrors(err)
 
 	b.feedTransactionStruct(string(responseData))
 }
