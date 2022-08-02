@@ -48,6 +48,5 @@ func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
 	registred.Account.CpfCnpj = cpf_cnpj
 	if service.CheckCPForCPNJ(registred.Account) && !util.ContainsError(c.BindJSON(&registred.Account)) {
 		repository.DeleteByCpf_Cnpj(c, registred.Account)
-		// service.DeleteOrNotStatusReturn(err, c, registred.Account)
 	}
 }

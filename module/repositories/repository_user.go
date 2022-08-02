@@ -37,7 +37,6 @@ func (u UserReferences) UpdateUserInDatabase() (err error) {
 }
 
 func (u UserReferences) DeleteUserInDatabase() (err error) {
-	// err = db.GetGormDB().Unscoped().Where("cpf_cnpj = ?", u.User.CpfCnpj).Delete(&u.User).Error
 	err = DeletingProcess(u.User)
 	return
 }
@@ -68,7 +67,6 @@ func GetUserByAccountId(id int) (model.User, error) {
 
 func DeletingProcess(user *model.User) error {
 	var (
-		// user        = &model.User{}
 		account     = &[]model.Account{}
 		transaction = &[]model.Transaction{}
 		tx          = db.GetGormDB().Begin()

@@ -27,29 +27,21 @@ type AccoReferences struct {
 func (ac AccoReferences) AddAccountToDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&ac.Account).Error
 	return
-
-	// c.JSON(http.StatusCreated, gin.H{"New Account registred": a})
 }
 
 func (ac *AccoReferences) FindAccountsInDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Find(&ac.Accounts).Error
 	return
-
-	// c.JSON(http.StatusFound, as)
 }
 
 func (ac AccoReferences) UpdateAccountInDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", ac.Account.Id).Updates(&ac.Account).Error
 	return
-
-	// c.JSON(http.StatusOK, a)
 }
 
 func (ac *AccoReferences) DeleteAccountInDatabase() (err error) {
 	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", ac.Account.CpfCnpj).Delete(&ac.Account).Error
 	return
-
-	// c.JSON(http.StatusOK, gin.H{"Account deleted": a})
 }
 
 // ----------------------------------------< Special case >---------------------------------------- \\

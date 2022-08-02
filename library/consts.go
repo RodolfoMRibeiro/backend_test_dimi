@@ -1,6 +1,5 @@
 package library
 
-// refer to database:
 const (
 	TB_USERS        = "tb_users"
 	TB_STATUS       = "tb_status"
