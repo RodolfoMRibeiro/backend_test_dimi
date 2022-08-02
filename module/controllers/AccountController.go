@@ -18,35 +18,35 @@ func CreateAccount(c *gin.Context) {
 }
 
 func FindAccount(c *gin.Context) {
-	var registred repository.AccoReferences
+	var registered repository.AccoReferences
 
-	err := registred.FindAccountsInDatabase()
-	service.FoundOrNotStatusReturn(err, c, registred.Accounts)
+	err := registered.FindAccountsInDatabase()
+	service.FoundOrNotStatusReturn(err, c, registered.Accounts)
 }
 
 func UpdateAccount(c *gin.Context) {
-	var registred repository.AccoReferences
+	var registered repository.AccoReferences
 
-	if !util.ContainsError(c.BindJSON(&registred.Account)) {
-		err := registred.UpdateAccountInDatabase()
-		service.ModifiedOrNotStatusReturn(err, c, registred.Account)
+	if !util.ContainsError(c.BindJSON(&registered.Account)) {
+		err := registered.UpdateAccountInDatabase()
+		service.ModifiedOrNotStatusReturn(err, c, registered.Account)
 	}
 }
 
 func DeleteAccount(c *gin.Context) {
-	var registred repository.AccoReferences
+	var registered repository.AccoReferences
 
-	if !util.ContainsError(c.BindJSON(&registred.Account)) {
-		err := registred.DeleteAccountInDatabase()
-		service.DeleteOrNotStatusReturn(err, c, registred.Account)
+	if !util.ContainsError(c.BindJSON(&registered.Account)) {
+		err := registered.DeleteAccountInDatabase()
+		service.DeleteOrNotStatusReturn(err, c, registered.Account)
 	}
 }
 
 func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
-	var registred *repository.AccoReferences
+	var registered *repository.AccoReferences
 
-	registred.Account.CpfCnpj = cpf_cnpj
-	if service.CheckCPForCPNJ(registred.Account) && !util.ContainsError(c.BindJSON(&registred.Account)) {
-		repository.DeleteByCpf_Cnpj(c, registred.Account)
+	registered.Account.CpfCnpj = cpf_cnpj
+	if service.CheckCPForCPNJ(registered.Account) && !util.ContainsError(c.BindJSON(&registered.Account)) {
+		repository.DeleteByCpf_Cnpj(c, registered.Account)
 	}
 }

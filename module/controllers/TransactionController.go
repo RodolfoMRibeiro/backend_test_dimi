@@ -32,7 +32,7 @@ func CreateTransaction(c *gin.Context) {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"New user registred": new.Transaction})
+		c.JSON(http.StatusOK, gin.H{"New user registered": new.Transaction})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Ops! something went wrong"})
 	}

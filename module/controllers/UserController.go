@@ -20,30 +20,30 @@ func CreateUser(c *gin.Context) {
 }
 
 func FindUser(c *gin.Context) {
-	var registred repository.UserReferences
+	var registered repository.UserReferences
 
-	err1 := registred.FindUsersInDatabase()
-	err2 := registred.GetAccountsFromUser()
+	err1 := registered.FindUsersInDatabase()
+	err2 := registered.GetAccountsFromUser()
 
 	fmt.Println(err1, err2)
-	service.FoundOrNotStatusReturn(err2, c, registred.Users)
+	service.FoundOrNotStatusReturn(err2, c, registered.Users)
 
 }
 
 func UploadUser(c *gin.Context) {
-	var registred repository.UserReferences
+	var registered repository.UserReferences
 
-	if !util.ContainsError(c.BindJSON(&registred.User)) && service.CheckEmailAndCpf_Cnpf(registred.User) {
-		err := registred.UpdateUserInDatabase()
-		service.ModifiedOrNotStatusReturn(err, c, registred.User)
+	if !util.ContainsError(c.BindJSON(&registered.User)) && service.CheckEmailAndCpf_Cnpf(registered.User) {
+		err := registered.UpdateUserInDatabase()
+		service.ModifiedOrNotStatusReturn(err, c, registered.User)
 	}
 }
 
 func DeleteUser(c *gin.Context) {
-	var registred repository.UserReferences
-	if !util.ContainsError(c.BindJSON(&registred.User)) {
-		err := registred.DeleteUserInDatabase()
-		service.DeleteOrNotStatusReturn(err, c, registred.User)
+	var registered repository.UserReferences
+	if !util.ContainsError(c.BindJSON(&registered.User)) {
+		err := registered.DeleteUserInDatabase()
+		service.DeleteOrNotStatusReturn(err, c, registered.User)
 	}
 
 }

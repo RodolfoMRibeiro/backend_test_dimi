@@ -36,20 +36,20 @@ func BadStatusReturn(c *gin.Context, err error) {
 
 func CreateOrNotStatusReturn(err error, c *gin.Context, obj interface{}) {
 	BadStatusReturn(c, err)
-	c.JSON(http.StatusCreated, gin.H{"New object registred": obj})
+	c.JSON(http.StatusCreated, gin.H{"New object registered": obj})
 
 }
 func FoundOrNotStatusReturn(err error, c *gin.Context, obj interface{}) {
 	BadStatusReturn(c, err)
-	c.JSON(http.StatusFound, gin.H{"Registred object Found": obj})
+	c.JSON(http.StatusFound, gin.H{"Registered object Found": obj})
 }
 
 func ModifiedOrNotStatusReturn(err error, c *gin.Context, obj interface{}) {
 	BadStatusReturn(c, err)
-	c.JSON(http.StatusOK, gin.H{"Registred object modified": obj})
+	c.JSON(http.StatusOK, gin.H{"Registered object modified": obj})
 }
 
 func DeleteOrNotStatusReturn(err error, c *gin.Context, obj interface{}) {
 	BadStatusReturn(c, err)
-	c.JSON(http.StatusOK, gin.H{"Registred object Deleted": obj})
+	c.JSON(http.StatusOK, gin.H{"Registered object Deleted": obj})
 }
