@@ -43,10 +43,15 @@ func DeleteAccount(c *gin.Context) {
 }
 
 func DeleteAccountsByCpf_Cnpj(c *gin.Context, cpf_cnpj string) {
-	var registered *repository.AccoReferences
+	var (
+		registered *repository.AccoReferences
+		isValid    bool
+	)
 
 	registered.Account.CpfCnpj = cpf_cnpj
-	if service.CheckCPForCPNJ(registered.Account) && !util.ContainsError(c.BindJSON(&registered.Account)) {
+	isValid = service.CheckCPForCPNJ(registered.Account) && !util.ContainsError(c.BindJSON(&registered.Account))
+
+	if isValid {
 		repository.DeleteByCpf_Cnpj(c, registered.Account)
 	}
 }
