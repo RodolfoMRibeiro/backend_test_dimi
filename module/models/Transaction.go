@@ -21,8 +21,8 @@ func (t *Transaction) ValidateTransaction() {
 	var transacStatus = integrations.TransactionStatus{}
 	transacStatus.ConnectWithExternalAPI()
 	if transacStatus.Authorization {
-		t.IdStatus = 1
+		t.IdStatus = library.AUTHORIZED_TRANSACTION_STATUS
 	} else {
-		t.IdStatus = 2
+		t.IdStatus = library.DENIED_TRANSACTION_STATUS
 	}
 }
