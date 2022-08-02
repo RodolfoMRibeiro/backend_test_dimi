@@ -24,24 +24,24 @@ type AccoReferences struct {
 	Accounts *[]model.Account
 }
 
-func (ac AccoReferences) AddAccountToDatabase() (err error) {
-	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&ac.Account).Error
-	return
+func (ac AccoReferences) AddAccountToDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&ac.Account).Error
+	return err
 }
 
-func (ac *AccoReferences) FindAccountsInDatabase() (err error) {
-	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Find(&ac.Accounts).Error
-	return
+func (ac *AccoReferences) FindAccountsInDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Find(&ac.Accounts).Error
+	return err
 }
 
-func (ac AccoReferences) UpdateAccountInDatabase() (err error) {
-	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", ac.Account.Id).Updates(&ac.Account).Error
-	return
+func (ac AccoReferences) UpdateAccountInDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", ac.Account.Id).Updates(&ac.Account).Error
+	return err
 }
 
-func (ac *AccoReferences) DeleteAccountInDatabase() (err error) {
-	err = db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", ac.Account.CpfCnpj).Delete(&ac.Account).Error
-	return
+func (ac *AccoReferences) DeleteAccountInDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", ac.Account.CpfCnpj).Delete(&ac.Account).Error
+	return err
 }
 
 // ----------------------------------------< Special case >---------------------------------------- \\
