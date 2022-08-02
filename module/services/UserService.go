@@ -19,12 +19,13 @@ func CheckEmailAndCpf_Cnpf(u *model.User) (boolean bool) {
 	return
 }
 
-func CheckCPForCPNJ(a *model.Account) (boolean bool) {
-	if cpfORcnpj, ok := util.VerifyingCPForCNPJ(util.LetOnlyNumbers(util.TrimAllSpacesInString(a.CpfCnpj))); ok {
-		boolean = true
+func CheckCPForCPNJ(a *model.Account) bool {
+	onlyNumbers := util.LetOnlyNumbers(util.TrimAllSpacesInString(a.CpfCnpj))
+	if cpfORcnpj, ok := util.VerifyingCPForCNPJ(onlyNumbers); ok {
 		a.CpfCnpj = cpfORcnpj
+		return true
 	}
-	return
+	return false
 }
 
 // ----------------------------------------< Common status >---------------------------------------- \\
