@@ -26,30 +26,30 @@ func (tr *TranReferences) FindTransactionsInDatabase() (err error) {
 
 func BeginTransaction(transac *model.Transaction) error {
 	var (
-		payerAccount = &model.Account{}
-		payeeAccount = &model.Account{}
-		tx           = db.GetGormDB().Begin()
+		payerAccount   = &model.Account{}
+		payeeAccount   = &model.Account{}
+		startedTransac = db.GetGormDB().Begin()
 	)
 
-	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Find(payerAccount).Error)
+	util.ValidateTransacion(startedTransac, startedTransac.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Find(payerAccount).Error)
 
-	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Find(payeeAccount).Error)
+	util.ValidateTransacion(startedTransac, startedTransac.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Find(payeeAccount).Error)
 
 	if payerAccount.Balance < transac.Value {
-		tx.Rollback()
+		startedTransac.Rollback()
 		return errors.New("insuficient Balance")
 	}
 
 	payerAccount.Balance = payerAccount.Balance - transac.Value
 	payeeAccount.Balance = payeeAccount.Balance + transac.Value
 
-	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Updates(payerAccount).Error)
+	util.ValidateTransacion(startedTransac, startedTransac.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayer).Updates(payerAccount).Error)
 
-	util.ValidateTransacion(tx, tx.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error)
+	util.ValidateTransacion(startedTransac, startedTransac.Table(library.TB_ACCOUNTS).Where("id = ?", transac.IdPayee).Updates(payeeAccount).Error)
 
-	util.ValidateTransacion(tx, tx.Table(library.TB_TRANSACTIONS).Create(transac).Error)
+	util.ValidateTransacion(startedTransac, startedTransac.Table(library.TB_TRANSACTIONS).Create(transac).Error)
 
-	tx.Commit()
+	startedTransac.Commit()
 
 	return nil
 }
