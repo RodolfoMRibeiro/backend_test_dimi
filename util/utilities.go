@@ -2,7 +2,6 @@ package util
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -18,19 +17,20 @@ func ParseMapToJson(mp map[string]string) string {
 }
 
 func TrimAllSpacesInString(str string) string {
-	return fmt.Sprint(strings.Replace(str, " ", "", -1))
+	return strings.Replace(str, " ", "", -1)
 }
 
-// take care about some UTF-8 characters ( ex.: á ç õ ù... )
 func RevomeSpecialChars(str string) string {
 	regx := regexp.MustCompile(`[^ A-Za-z0-9]`)
-	return fmt.Sprint(regx.ReplaceAllString(str, ""))
+	return regx.ReplaceAllString(str, "")
 }
 
 func LetOnlyNumbers(str string) string {
 	regx := regexp.MustCompile(`[^ 0-9]`)
-	return fmt.Sprint(regx.ReplaceAllString(str, ""))
+	return regx.ReplaceAllString(str, "")
 }
+
+// ---------------------------------< validate func >--------------------------------- \\
 
 func IsEmailValid(e string) bool {
 	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
@@ -38,17 +38,21 @@ func IsEmailValid(e string) bool {
 }
 
 func VerifyingCPForCNPJ(str string) (string, bool) {
-	if brdoc.IsCPF(str) || brdoc.IsCNPJ(str) {
-		return str, true
-	}
-	return str, false
+	return str, brdoc.IsCPF(str) || brdoc.IsCNPJ(str)
 }
 
-func PresentateErros(err error) {
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
-}
+// ---------------------------------< show 'n treat Erros >--------------------------------- \\
+
+// func HasError(err error) bool {
+// 	return showError(err != nil, err)
+// }
+
+// func showError(yes bool, err error) bool {
+// 	if yes {
+// 		fmt.Println("Error: ", err)
+// 	}
+// 	return return
+// }
 
 func BadRequest(c *gin.Context, err error) {
 	if err == nil {
@@ -58,11 +62,7 @@ func BadRequest(c *gin.Context, err error) {
 }
 
 func ContainsError(err error) bool {
-	if err != nil {
-		return true
-	} else {
-		return false
-	}
+	return err != nil
 }
 
 func ValidateTransacion(tx *gorm.DB, err error) error {
