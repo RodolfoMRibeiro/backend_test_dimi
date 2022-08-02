@@ -61,7 +61,7 @@ A little more about this sample bank internal process... It contains a route to 
 
 <div align="center">
     
-<img style="margin: 30px" src="https://user-images.githubusercontent.com/89111957/181146633-b602e870-492d-4529-8242-b82f94a4b6bc.png" align="center" style=" width=200px height= 200px " />
+<img style="margin: auto" src="https://user-images.githubusercontent.com/89111957/181146633-b602e870-492d-4529-8242-b82f94a4b6bc.png" align="center" style=" width=200px height= 200px " />
 </div>  
 
 
