@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"transaction/library"
 
+	model "transaction/module/models"
 	repository "transaction/module/repositories"
 	service "transaction/module/services"
 	"transaction/util"
@@ -27,7 +28,7 @@ func CreateTransaction(c *gin.Context) {
 	}
 
 	new.Transaction.ValidateTransaction()
-	if new.Transaction.IdPayer != new.Transaction.IdPayee && new.Transaction.IdStatus == library.STORE_KEEPER_STATUS && !isStoreKeeper(new.Transaction.IdPayer) {
+	if isValidPayer(new.Transaction) {
 		if err := repository.BeginTransaction(new.Transaction); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 			return
@@ -40,11 +41,9 @@ func CreateTransaction(c *gin.Context) {
 
 // ----------------------------------------< Aux func >---------------------------------------- \\
 
-func isStoreKeeper(AccountId int) bool {
-	user, _ := repository.GetUserByAccountId(AccountId)
-	if user.IdCategory == 1 {
-		return true
-	} else {
-		return false
-	}
+func isValidPayer(transac *model.Transaction) bool {
+	payerIsNotPayee := transac.IdPayer != transac.IdPayee
+	isStoreKeeper := transac.IdStatus == library.STORE_KEEPER_STATUS
+
+	return payerIsNotPayee && isStoreKeeper
 }
