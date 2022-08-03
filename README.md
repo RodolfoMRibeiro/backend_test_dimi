@@ -43,7 +43,7 @@ A little more about this sample bank internal process... It contains a route to 
 
 
 ## Database Modeling
-<table><tr><td valign="center" width="50%">
+<table><tr><td align="left" width="50%">
 
 - 🔭 Relational database
   
@@ -93,6 +93,9 @@ $ docker-compose up -d
 │    ├── seed
 │    |    └── seed.go
 |    |
+│    ├── model
+│    |    └── tables.go
+|    |
 │    ├── database.go
 │    └── runner.go
 |
@@ -108,14 +111,6 @@ $ docker-compose up -d
 │    |    ├── controller_transaction.go
 │    |    ├── controller_account.go
 │    │    └── controller_user.go
-│    │
-│    ├── models
-│    |    ├── model_transaction.go
-│    |    ├── model_interfaces.go
-│    |    ├── model_category.go
-│    |    ├── model_account.go
-│    |    ├── model_status.go
-│    │    └── model_user.go
 │    │
 |    ├── repositories
 │    |    ├── repository_transaction.go
