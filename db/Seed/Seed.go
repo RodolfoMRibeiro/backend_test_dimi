@@ -20,8 +20,8 @@ func populateCategoryData(db *gorm.DB) {
 	}
 
 	for _, category := range categories {
-		if err := db.Table(library.TB_CATEGORIES).Create(category).Error; err != nil {
-			break
+		if err := db.Table(library.TB_CATEGORIES).Find(&category).Error; err != nil {
+			db.Table(library.TB_CATEGORIES).Create(category)
 		}
 	}
 }
@@ -33,8 +33,8 @@ func populateStatusData(db *gorm.DB) {
 	}
 
 	for _, status := range statusArr {
-		if err := db.Table(library.TB_STATUS).Create(&status).Error; err != nil {
-			break
+		if err := db.Table(library.TB_STATUS).Find(&status).Error; err != nil {
+			db.Table(library.TB_STATUS).Create(&status)
 		}
 	}
 }

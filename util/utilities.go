@@ -18,18 +18,20 @@ func ParseMapToJson(mp map[string]string) string {
 }
 
 func TrimAllSpacesInString(str string) string {
-	return fmt.Sprint(strings.Replace(str, " ", "", -1))
+	return strings.Replace(str, " ", "", -1)
 }
 
 func RevomeSpecialChars(str string) string {
 	regx := regexp.MustCompile(`[^ A-Za-z0-9]`)
-	return fmt.Sprint(regx.ReplaceAllString(str, ""))
+	return regx.ReplaceAllString(str, "")
 }
 
 func LetOnlyNumbers(str string) string {
 	regx := regexp.MustCompile(`[^ 0-9]`)
-	return fmt.Sprint(regx.ReplaceAllString(str, ""))
+	return regx.ReplaceAllString(str, "")
 }
+
+// ---------------------------------< validate func >--------------------------------- \\
 
 func IsEmailValid(e string) bool {
 	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
@@ -37,10 +39,7 @@ func IsEmailValid(e string) bool {
 }
 
 func VerifyingCPForCNPJ(str string) (string, bool) {
-	if brdoc.IsCPF(str) || brdoc.IsCNPJ(str) {
-		return str, true
-	}
-	return str, false
+	return str, brdoc.IsCPF(str) || brdoc.IsCNPJ(str)
 }
 
 func ShowErrors(err error) {
