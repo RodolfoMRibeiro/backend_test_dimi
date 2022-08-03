@@ -1,8 +1,8 @@
 package seed
 
 import (
+	model "transaction/db/model"
 	"transaction/library"
-	model "transaction/module/models"
 
 	"gorm.io/gorm"
 )

@@ -2,7 +2,7 @@ package service
 
 import (
 	"net/http"
-	model "transaction/module/models"
+	model "transaction/db/model"
 	"transaction/util"
 
 	"github.com/gin-gonic/gin"

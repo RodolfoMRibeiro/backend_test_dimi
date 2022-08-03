@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	config "transaction/configs"
-	model "transaction/module/models"
+	model "transaction/db/model"
 
 	"gorm.io/gorm"
 )

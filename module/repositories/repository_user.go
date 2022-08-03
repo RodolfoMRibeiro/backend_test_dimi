@@ -2,8 +2,8 @@ package repository
 
 import (
 	"transaction/db"
+	model "transaction/db/model"
 	"transaction/library"
-	model "transaction/module/models"
 	"transaction/util"
 )
 

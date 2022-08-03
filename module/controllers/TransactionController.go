@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"transaction/library"
 
-	model "transaction/module/models"
+	model "transaction/db/model"
 	repository "transaction/module/repositories"
 	service "transaction/module/services"
 	"transaction/util"
@@ -27,7 +27,7 @@ func CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	new.Transaction.ValidateTransaction()
+	new.ValidateTransaction()
 	if isValidPayer(new.Transaction) {
 		if err := repository.BeginTransaction(new.Transaction); err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)

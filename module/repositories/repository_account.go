@@ -3,8 +3,8 @@ package repository
 import (
 	"net/http"
 	"transaction/db"
+	model "transaction/db/model"
 	"transaction/library"
-	model "transaction/module/models"
 
 	"github.com/gin-gonic/gin"
 )

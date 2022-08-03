@@ -3,8 +3,9 @@ package repository
 import (
 	"errors"
 	"transaction/db"
+	model "transaction/db/model"
+	"transaction/integrations"
 	"transaction/library"
-	model "transaction/module/models"
 	"transaction/util"
 
 	"github.com/gin-gonic/gin"
@@ -52,4 +53,15 @@ func BeginTransaction(transac *model.Transaction) error {
 	startedTransac.Commit()
 
 	return nil
+}
+
+func (tr *TranReferences) ValidateTransaction() {
+	var transacStatus = integrations.TransactionStatus{}
+	transacStatus.ConnectWithExternalAPI()
+	if transacStatus.Authorization {
+
+		tr.Transaction.IdStatus = library.AUTHORIZED_TRANSACTION_STATUS
+	} else {
+		tr.Transaction.IdStatus = library.DENIED_TRANSACTION_STATUS
+	}
 }

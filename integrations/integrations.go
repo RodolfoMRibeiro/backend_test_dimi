@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	config "transaction/configs"
 )
 
 type TransactionStatus struct {
@@ -13,7 +14,7 @@ type TransactionStatus struct {
 
 func (b *TransactionStatus) ConnectWithExternalAPI() {
 
-	response, err := http.Get(`https://run.mocky.io/v3/d02168c6-d88d-4ff2-aac6-9e9eb3425e31`)
+	response, err := http.Get(config.API.URL)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
