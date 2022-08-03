@@ -15,7 +15,7 @@ func CreateUser(c *gin.Context) {
 
 	if !util.ContainsError(c.BindJSON(&new.User)) && service.CheckEmailAndCpf_Cnpf(new.User) {
 		err := new.AddUserToDatabase()
-		service.FoundOrNotStatusReturn(err, c, new.User)
+		service.CreateOrNotStatusReturn(err, c, new.User)
 	}
 }
 

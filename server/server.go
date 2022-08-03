@@ -7,8 +7,7 @@ import (
 )
 
 type Server struct {
-	host         string
-	port         string
+	host, port   string
 	serverEngine *gin.Engine
 }
 

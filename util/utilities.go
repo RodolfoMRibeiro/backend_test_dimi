@@ -42,6 +42,15 @@ func VerifyingCPForCNPJ(str string) (string, bool) {
 	return str, brdoc.IsCPF(str) || brdoc.IsCNPJ(str)
 }
 
+func ValidateTransacion(tx *gorm.DB, err error) error {
+	if err != nil {
+		tx.Rollback()
+	}
+	return err
+}
+
+// ---------------------------------< check errors >--------------------------------- \\
+
 func ShowErrors(err error) {
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -57,12 +66,4 @@ func BadRequest(c *gin.Context, err error) {
 
 func ContainsError(err error) bool {
 	return err != nil
-}
-
-func ValidateTransacion(tx *gorm.DB, err error) error {
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	return nil
 }
