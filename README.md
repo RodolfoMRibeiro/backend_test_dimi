@@ -43,7 +43,7 @@ A little more about this sample bank internal process... It contains a route to 
 
 
 ## Database Modeling
-<table><tr><td valign="top" width="50%">
+<table><tr><td valign="center" width="50%">
 
 - 🔭 Relational database
   
