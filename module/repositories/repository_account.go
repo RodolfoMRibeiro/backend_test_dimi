@@ -1,0 +1,64 @@
+package repository
+
+import (
+	"net/http"
+	"transaction/db"
+	model "transaction/db/model"
+	"transaction/library"
+
+	"github.com/gin-gonic/gin"
+)
+
+type IAccountReferences interface {
+	GetAccountById(id int) (model.Account, error)
+	AddAccountToDatabase() error
+	FindAccountsInDatabase() error
+	UpdateAccountInDatabase() error
+	DeleteAccountInDatabase() error
+	DeleteByCpf_Cnpj(c *gin.Context, a *model.Account) error
+}
+
+type AccoReferences struct {
+	IAccountReferences
+	Account  *model.Account
+	Accounts *[]model.Account
+}
+
+func (ac AccoReferences) AddAccountToDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Create(&ac.Account).Error
+	return err
+}
+
+func (ac *AccoReferences) FindAccountsInDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Find(&ac.Accounts).Error
+	return err
+}
+
+func (ac AccoReferences) UpdateAccountInDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", ac.Account.Id).Updates(&ac.Account).Error
+	return err
+}
+
+func (ac *AccoReferences) DeleteAccountInDatabase() error {
+	err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", ac.Account.CpfCnpj).Delete(&ac.Account).Error
+	return err
+}
+
+// ----------------------------------------< Special case >---------------------------------------- \\
+
+func DeleteByCpf_Cnpj(c *gin.Context, a *model.Account) {
+
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("cpf_cnpj = ?", a.CpfCnpj).Delete(&a).Error; err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"Account deleted": a})
+}
+
+func GetAccountById(id int) (model.Account, error) {
+	var NewAccount *model.Account
+	if err := db.GetGormDB().Table(library.TB_ACCOUNTS).Where("id = ?", id).First(&NewAccount).Error; err != nil {
+		return *NewAccount, err
+	}
+	return *NewAccount, nil
+}
